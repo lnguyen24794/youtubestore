@@ -1,0 +1,351 @@
+/* Main CSS */
+:root {
+    --primary-color: #ff0000;
+    --text-color: #333;
+    --bg-color: #f9f9f9;
+    --card-bg: #fff;
+    --border-color: #ddd;
+    --gap: 20px;
+    --sidebar-width: 250px;
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+.site-header {
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    padding: 15px 0;
+    margin-bottom: 30px;
+}
+
+.site-title a {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+/* Layout - Archive */
+.main-layout {
+    display: flex;
+    gap: 30px;
+}
+
+.sidebar-filter {
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    height: fit-content;
+}
+
+.content-area {
+    flex-grow: 1;
+}
+
+/* Filter Styles */
+.sidebar-filter h3 {
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.filter-group {
+    margin-bottom: 20px;
+}
+
+.filter-group h4 {
+    margin-bottom: 10px;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #666;
+}
+
+.search-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.checkbox-list label,
+.filter-group label {
+    display: block;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-filter {
+    width: 100%;
+    padding: 10px;
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-filter:hover {
+    opacity: 0.9;
+}
+
+/* Grid */
+.channel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.channel-card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.channel-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-thumb {
+    position: relative;
+    padding-top: 56.25%;
+    /* 16:9 */
+    background: #eee;
+}
+
+.card-thumb img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-title {
+    font-size: 16px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 44px;
+}
+
+.card-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.monetized {
+    color: green;
+    font-weight: bold;
+    background: #e6fffa;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.card-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* Single Page */
+.single-channel-container {
+    max-width: 900px;
+}
+
+.channel-header {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+.status-badge.available {
+    background: green;
+}
+
+.status-badge.sold {
+    background: gray;
+}
+
+.channel-video-area {
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.youtube-facade {
+    position: relative;
+    padding-top: 56.25%;
+    cursor: pointer;
+    background: #000;
+}
+
+.youtube-facade img,
+.youtube-facade iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 68px;
+    height: 48px;
+    background-color: rgba(33, 33, 33, 0.8);
+    border-radius: 12px;
+    z-index: 2;
+}
+
+.play-button::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-style: solid;
+    border-width: 10px 0 10px 18px;
+    border-color: transparent transparent transparent #fff;
+    margin-left: 2px;
+}
+
+.youtube-facade:hover .play-button {
+    background-color: #f00;
+}
+
+.channel-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-item .label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.info-item .value {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.info-item .value.price {
+    color: var(--primary-color);
+    font-size: 20px;
+}
+
+/* Sticky CTA */
+.sticky-cta-mobile {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    z-index: 100;
+}
+
+.sticky-cta-mobile a {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    flex: 1;
+}
+
+.sticky-cta-mobile {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-cta.zalo {
+    background: #0088ff;
+}
+
+.btn-cta.phone {
+    background: #4caf50;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main-layout {
+        flex-direction: column;
+    }
+
+    .sidebar-filter {
+        width: 100%;
+    }
+
+    .sticky-cta-mobile {
+        display: flex;
+    }
+
+    .site-footer {
+        margin-bottom: 60px;
+    }
+
+    /* Space for CTA */
+
+    .channel-info-grid {
+        grid-template-columns: 1fr;
+    }
+}
