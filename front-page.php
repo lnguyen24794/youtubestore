@@ -65,11 +65,10 @@ get_header();
                     ► Đưa Sản Phẩm, Doanh Nghiệp của bạn đến với khách hàng mà không tốn phí.<br>
                     ► Giúp khách hàng đánh giá, nhìn nhận đúng và rõ hơn về Sản Phẩm, Doanh Nghiệp.
                 </p>
-                <div class="btn-normal" style="margin-top: 10px;">
-                    <a style="background: #4F4F4F; border-radius: 24px;"
-                        href="<?php echo home_url('/mua-kenh-youtube'); ?>" title="Danh Sách Kênh">
-                        <span style="color: white !important" class="btn-normal__title">DANH SÁCH KÊNH</span>
-                        <svg style="color: white !important" class="icon">
+                <div class="btn-normal">
+                    <a href="<?php echo home_url('/mua-kenh-youtube'); ?>" title="Danh Sách Kênh">
+                        <span class="btn-normal__title">DANH SÁCH KÊNH</span>
+                        <svg class="icon">
                             <use xlink:href="#icon-arrow"></use>
                         </svg>
                     </a>

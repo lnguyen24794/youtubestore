@@ -1,0 +1,46 @@
+📋 SEO & Performance Optimization Requirements: Text/HTML Ratio
+Role: SEO Technical Specialist & Frontend Optimizer. Objective: Maintain a Text-to-HTML ratio above 15% for all web pages. Context: The current codebase has a low text-to-code ratio (~10%), which negatively impacts crawl budget and page load speed.
+
+1. Technical Constraints (Code Reduction)
+Strictly No Inline Styles/Scripts:
+
+Move all CSS inside <style> or style="..." to external stylesheets (CSS/SCSS files).
+Di chuyển tất cả CSS bên trong <style> hoặc style="..." sang các biểu định kiểu bên ngoài (tệp CSS/SCSS).
+
+Move all JavaScript inside <script> to external JS/TS files.
+
+Eliminate "Div Soup":
+
+Refactor deeply nested <div> structures. Use CSS Grid/Flexbox to reduce the need for wrapper elements.
+
+Replace generic <div> with Semantic HTML5 tags where appropriate (<header>, <nav>, <main>, <article>, <section>, <footer>).
+
+Clean Code:
+
+Remove all commented-out code blocks before finalizing output.
+
+Remove unnecessary whitespace and huge base64 strings (use image URLs instead).
+
+Framework Specifics (if applicable):
+
+If using Vue/React: Avoid excessive wrapping components. Use fragments (<template> or <>) to avoid rendering extra nodes in the DOM.
+
+2. Content Enhancement (Text Expansion)
+Enforce Alt Text: All <img> tags must have descriptive, SEO-friendly alt attributes.
+
+Visible Text Priority:
+
+When generating UI components (cards, lists), always include a text description or summary, not just images/icons.
+
+Suggest adding headings (<h2>, <h3>) to break up layout and add context.
+
+Fallback Content: Ensure rich media (videos, canvas) has text-based fallback content or captions.
+
+3. Verification Step
+Before confirming a task is complete, the Agent must ask itself:
+
+Did I remove unnecessary HTML tags?
+
+Did I externalize all long scripts and styles?
+
+Is the content descriptive enough for a search engine to understand the context without rendering?

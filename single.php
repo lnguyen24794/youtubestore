@@ -8,7 +8,7 @@
                 <div class="col-md-8 col-12">
                     <?php while (have_posts()):
                         the_post(); ?>
-                        <h1 style="margin-bottom: 20px;">
+                        <h1 class="single-post-title">
                             <?php the_title(); ?>
                         </h1>
                         
@@ -18,19 +18,18 @@
 
                         <div>
                             <!-- Google Ads Placeholder -->
-                            <ins class="adsbygoogle" style="display:block !important;"
+                            <ins class="adsbygoogle adsbygoogle-block"
                                 data-ad-client="ca-pub-4885114851785989" data-ad-slot="6830795445" data-ad-format="auto"
                                 data-full-width-responsive="true"></ins>
                         </div>
 
                         <div class="tour-contact-wrapper">
-                            <div class="btn-normal" style="margin: 30px;">
-                                <a style="background: #4F4F4F; border-radius: 24px;"
-                                    href="<?php echo home_url('/lien-he'); ?>">
-                                    <span style="color: white !important; visibility: visible;" class="btn-normal__title">
+                            <div class="btn-normal">
+                                <a href="<?php echo home_url('/lien-he'); ?>">
+                                    <span class="btn-normal__title">
                                         Liên Hệ
                                     </span>
-                                    <svg style="color: white !important" class="icon">
+                                    <svg class="icon">
                                         <use xlink:href="#icon-arrow"></use>
                                     </svg>
                                 </a>

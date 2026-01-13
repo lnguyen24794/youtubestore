@@ -418,7 +418,7 @@ get_header();
                                     <?php echo esc_html($status_text); ?>
                                 </span>
                                 <?php if ($category_name !== 'N/A'): ?>
-                                    <span style="font-size: 14px; opacity: 0.9;">Chủ đề: <?php echo esc_html($category_name); ?></span>
+                                    <span class="channel-category-label">Chủ đề: <?php echo esc_html($category_name); ?></span>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -429,7 +429,7 @@ get_header();
                                 <div class="channel-video-wrapper">
                                     <?php if ($video_id): ?>
                                         <div class="youtube-facade" data-id="<?php echo esc_attr($video_id); ?>">
-                                            <img src="https://img.youtube.com/vi/<?php echo esc_attr($video_id); ?>/maxresdefault.jpg" alt="Video Thumbnail" loading="lazy">
+                                            <img src="https://img.youtube.com/vi/<?php echo esc_attr($video_id); ?>/maxresdefault.jpg" alt="<?php echo esc_attr(get_the_title() . ' - Video Thumbnail'); ?>" loading="lazy">
                                             <div class="play-button-overlay"></div>
                                         </div>
                                     <?php else: ?>
@@ -462,7 +462,7 @@ get_header();
                                 <tr>
                                     <td class="channel-info-label">Link kênh:</td>
                                     <td class="channel-info-value">
-                                        <a href="<?php echo esc_url($video_url); ?>" target="_blank" style="color: #dc3545; text-decoration: none; word-break: break-all;">
+                                        <a href="<?php echo esc_url($video_url); ?>" target="_blank" class="channel-link-url">
                                             <?php echo esc_html($video_url); ?>
                                         </a>
                                     </td>

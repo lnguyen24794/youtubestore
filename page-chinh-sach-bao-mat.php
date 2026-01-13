@@ -24,13 +24,12 @@ get_header();
                         </div>
 
                         <div class="tour-contact-wrapper">
-                            <div class="btn-normal" style="margin-top: 10px;">
-                                <a style="background: #4F4F4F; border-radius: 24px;"
-                                    href="<?php echo home_url('/lien-he'); ?>">
-                                    <span style="color: white !important; visibility: visible;" class="btn-normal__title">
+                            <div class="btn-normal">
+                                <a href="<?php echo home_url('/lien-he'); ?>">
+                                    <span class="btn-normal__title">
                                         Liên Hệ
                                     </span>
-                                    <svg style="color: white !important" class="icon">
+                                    <svg class="icon">
                                         <use xlink:href="#icon-arrow"></use>
                                     </svg>
                                 </a>

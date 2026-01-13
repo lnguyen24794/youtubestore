@@ -330,45 +330,45 @@ get_header();
     </div>
 
     <!-- Top Filter Section -->
-    <div class="top-filter-section">
-        <form id="top-filter-form" style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end;">
+    <section class="top-filter-section">
+        <form id="top-filter-form">
             <div class="filter-group">
-                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Giá (VND):</label>
-                <div style="display: flex; gap: 10px;">
+                <label>Giá (VND):</label>
+                <div>
                     <div>
-                        <label style="display: block; font-size: 0.9em; margin-bottom: 3px;">Từ</label>
-                        <input type="number" name="price_from" value="0" min="0" style="width: 140px; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        <label>Từ</label>
+                        <input type="number" name="price_from" value="0" min="0">
                     </div>
                     <div>
-                        <label style="display: block; font-size: 0.9em; margin-bottom: 3px;">Đến</label>
-                        <input type="number" name="price_to" value="0" min="0" style="width: 140px; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        <label>Đến</label>
+                        <input type="number" name="price_to" value="0" min="0">
                     </div>
                 </div>
             </div>
             <div class="filter-group">
-                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Lượng subscribers:</label>
-                <div style="display: flex; gap: 10px;">
+                <label>Lượng subscribers:</label>
+                <div>
                     <div>
-                        <label style="display: block; font-size: 0.9em; margin-bottom: 3px;">Từ</label>
-                        <input type="number" name="subscribers_from" value="0" min="0" style="width: 140px; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        <label>Từ</label>
+                        <input type="number" name="subscribers_from" value="0" min="0">
                     </div>
                     <div>
-                        <label style="display: block; font-size: 0.9em; margin-bottom: 3px;">Đến</label>
-                        <input type="number" name="subscribers_to" value="0" min="0" style="width: 140px; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        <label>Đến</label>
+                        <input type="number" name="subscribers_to" value="0" min="0">
                     </div>
                 </div>
             </div>
-            <div class="filter-buttons" style="display: flex; gap: 10px;">
-                <button type="button" id="reset-filter" class="btn btn-warning" style="padding: 10px 25px; background: #ffc107; color: #000; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Hủy bỏ</button>
-                <button type="submit" class="btn btn-success" style="padding: 10px 25px; background: #28a745; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Lọc</button>
+            <div class="filter-buttons">
+                <button type="button" id="reset-filter" class="btn btn-warning">Hủy bỏ</button>
+                <button type="submit" class="btn btn-success">Lọc</button>
             </div>
         </form>
-    </div>
+    </section>
 
     <!-- Display Options and Search -->
     <div class="filter-controls">
         <div class="display-options">
-            <span style="font-weight: 500;">Hiển thị</span>
+            <span>Hiển thị</span>
             <select id="per-page">
                 <?php
                 $current_per_page = isset($_GET['posts_per_page']) ? intval($_GET['posts_per_page']) : 25;
@@ -378,10 +378,10 @@ get_header();
                 <option value="50" <?php selected($current_per_page, 50); ?>>50</option>
                 <option value="100" <?php selected($current_per_page, 100); ?>>100</option>
             </select>
-            <span style="font-weight: 500;">kênh</span>
+            <span>kênh</span>
         </div>
-        <div class="search-box">
-            <label style="font-weight: 500;">Tìm kiếm:</label>
+        <div class="search-controls">
+            <label>Tìm kiếm:</label>
             <input type="search" id="channel-search" placeholder="Tìm kiếm kênh, chủ đề...">
         </div>
     </div>
@@ -516,7 +516,7 @@ get_header();
                             </td>
                             
                             <td class="price-value">
-                                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                <div class="channel-price-wrapper">
                                     <span><?php echo esc_html($price_formatted); ?></span>
                                     <a href="<?php echo esc_url($order_url); ?>" target="_blank" class="btn-channel btn-order">Đặt mua</a>
                                 </div>
@@ -595,152 +595,16 @@ get_header();
     
     if ($archive_page && !empty($archive_page->post_content)):
         ?>
-        <div class="archive-content-section" style="background: #fff; border-radius: 12px; padding: 30px; margin: 30px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <section class="archive-content-section">
             <div class="tour-subtitle-wrapper wrapper-content">
                 <?php echo apply_filters('the_content', $archive_page->post_content); ?>
             </div>
-        </div>
+        </section>
         <?php
     endif;
     ?>
 </div>
 
-<script>
-jQuery(document).ready(function($) {
-    // Get current sort from URL
-    var urlParams = new URLSearchParams(window.location.search);
-    var currentOrderby = urlParams.get('orderby') || 'subscribers';
-    var currentOrder = urlParams.get('order') || 'DESC';
-    
-    // Set initial sort indicator
-    $('.channels-table th').each(function() {
-        var sortField = $(this).find('.sort-indicator').data('sort');
-        if (sortField === currentOrderby) {
-            var indicator = currentOrder === 'ASC' ? '↑' : '↓';
-            $(this).find('.sort-indicator').text(indicator);
-        }
-    });
-    
-    // Copy URL functionality
-    $('.btn-copy-url').on('click', function() {
-        var url = $(this).data('url');
-        var $temp = $('<input>');
-        $('body').append($temp);
-        $temp.val(url).select();
-        document.execCommand('copy');
-        $temp.remove();
-        
-        // Show notification
-        var $btn = $(this);
-        var originalText = $btn.text();
-        $btn.text('Đã sao chép!');
-        setTimeout(function() {
-            $btn.text(originalText);
-        }, 2000);
-    });
-    
-    // Filter function (client-side for instant feedback)
-    function applyFilters() {
-        var priceFrom = parseFloat($('input[name="price_from"]').val()) || 0;
-        var priceTo = parseFloat($('input[name="price_to"]').val()) || Infinity;
-        var subscribersFrom = parseFloat($('input[name="subscribers_from"]').val()) || 0;
-        var subscribersTo = parseFloat($('input[name="subscribers_to"]').val()) || Infinity;
-        var searchTerm = $('#channel-search').val().toLowerCase();
-        
-        var visibleCount = 0;
-        
-        $('.channels-table tbody tr').each(function() {
-            var $row = $(this);
-            if ($row.find('.no-results').length > 0) {
-                return; // Skip no-results row
-            }
-            
-            var price = parseFloat($row.data('price')) || 0;
-            var subscribers = parseFloat($row.data('subscribers')) || 0;
-            var category = $row.data('category').toLowerCase();
-            var status = $row.data('status').toLowerCase();
-            var rowText = $row.text().toLowerCase();
-            
-            var priceMatch = (price >= priceFrom && price <= priceTo);
-            var subscribersMatch = (subscribers >= subscribersFrom && subscribers <= subscribersTo);
-            var searchMatch = (searchTerm === '' || rowText.indexOf(searchTerm) !== -1 || category.indexOf(searchTerm) !== -1);
-            
-            if (priceMatch && subscribersMatch && searchMatch) {
-                $row.show();
-                visibleCount++;
-            } else {
-                $row.hide();
-            }
-        });
-        
-        // Show message if no results
-        if (visibleCount === 0) {
-            if ($('.channels-table tbody .no-results').length === 0) {
-                $('.channels-table tbody').append('<tr><td colspan="5" class="no-results"><h3>Không tìm thấy kênh nào phù hợp với bộ lọc</h3><p>Vui lòng thử lại với điều kiện khác</p></td></tr>');
-            }
-        } else {
-            $('.channels-table tbody .no-results').closest('tr').remove();
-        }
-    }
-    
-    // Top filter form
-    $('#top-filter-form').on('submit', function(e) {
-        e.preventDefault();
-        applyFilters();
-    });
-    
-    // Reset filter
-    $('#reset-filter').on('click', function() {
-        $('#top-filter-form')[0].reset();
-        $('#channel-search').val('');
-        $('.channels-table tbody tr').show();
-        $('.channels-table tbody .no-results').closest('tr').remove();
-    });
-    
-    // Filter on input change
-    $('#top-filter-form input').on('input', function() {
-        applyFilters();
-    });
-    
-    // Per page change
-    $('#per-page').on('change', function() {
-        var perPage = parseInt($(this).val());
-        var url = new URL(window.location.href);
-        url.searchParams.set('posts_per_page', perPage);
-        url.searchParams.set('paged', 1);
-        window.location.href = url.toString();
-    });
-    
-    // Search functionality
-    $('#channel-search').on('keyup', function() {
-        applyFilters();
-    });
-    
-    // Sort functionality - Server-side via URL
-    $('.channels-table th').on('click', function() {
-        var sortField = $(this).find('.sort-indicator').data('sort');
-        if (!sortField) return;
-        
-        var url = new URL(window.location.href);
-        var currentOrderbyParam = url.searchParams.get('orderby');
-        var currentOrderParam = url.searchParams.get('order') || 'DESC';
-        
-        // Determine new order
-        var newOrder = 'DESC';
-        if (currentOrderbyParam === sortField) {
-            newOrder = currentOrderParam === 'DESC' ? 'ASC' : 'DESC';
-        }
-        
-        // Set URL parameters
-        url.searchParams.set('orderby', sortField);
-        url.searchParams.set('order', newOrder);
-        url.searchParams.set('paged', 1); // Reset to page 1 when sorting
-        
-        // Redirect to new URL
-        window.location.href = url.toString();
-    });
-});
-</script>
 
 <?php
 get_footer();

@@ -52,10 +52,13 @@ function youtubestore_scripts()
 {
     // Enqueue migrated styles
     // Note: We keep style.css for Theme Declaration but use app.min.css for visual
-    wp_enqueue_style('youtubestore-style', get_stylesheet_uri()); // Main style.css
+    wp_enqueue_style('youtubestore-style', get_stylesheet_uri(), array(), YOUTUBESTORE_VERSION); // Main style.css
     wp_enqueue_style('youtubestore-app', YOUTUBESTORE_URI . '/assets/css/home/app.min.css', array(), YOUTUBESTORE_VERSION);
+    
+    // Optimized theme styles (moved from inline styles)
+    wp_enqueue_style('youtubestore-optimized', YOUTUBESTORE_URI . '/assets/css/theme-optimized.css', array('youtubestore-app'), YOUTUBESTORE_VERSION);
 
-    // Enqueue migrated scripts
+    // Enqueue migrated scripts with defer for better performance
     // Use WP jQuery instead of bundled one to avoid redundancy, unless strict requirement.
     wp_enqueue_script('jquery');
 
@@ -69,8 +72,49 @@ function youtubestore_scripts()
     wp_localize_script('youtubestore-main', 'youtubestore_vars', array(
         'ajaxurl' => admin_url('admin-ajax.php')
     ));
+    
+    // Archive channels script (moved from inline)
+    if (is_post_type_archive('youtube_channel')) {
+        wp_enqueue_script('youtubestore-archive-channels', YOUTUBESTORE_URI . '/assets/js/archive-channels.js', array('jquery'), YOUTUBESTORE_VERSION, true);
+    }
 }
 add_action('wp_enqueue_scripts', 'youtubestore_scripts');
+
+/**
+ * Add defer/async attributes to scripts for better performance
+ */
+function youtubestore_defer_scripts($tag, $handle, $src)
+{
+    // Scripts to defer
+    $defer_scripts = array(
+        'youtubestore-sweetalert',
+        'youtubestore-app',
+        'youtubestore-main',
+        'youtubestore-archive-channels'
+    );
+    
+    if (in_array($handle, $defer_scripts)) {
+        return str_replace(' src', ' defer src', $tag);
+    }
+    
+    return $tag;
+}
+add_filter('script_loader_tag', 'youtubestore_defer_scripts', 10, 3);
+
+/**
+ * Add resource hints for better performance
+ */
+function youtubestore_resource_hints($urls, $relation_type)
+{
+    if ('preconnect' === $relation_type) {
+        $urls[] = array(
+            'href' => 'https://fonts.googleapis.com',
+            'crossorigin',
+        );
+    }
+    return $urls;
+}
+add_filter('wp_resource_hints', 'youtubestore_resource_hints', 10, 2);
 
 /**
  * Require Files
