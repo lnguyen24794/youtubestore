@@ -83,6 +83,7 @@ require_once YOUTUBESTORE_DIR . '/inc/sync/class-google-sheet-sync.php';
 require_once YOUTUBESTORE_DIR . '/inc/ajax-filters.php';
 
 // Import functionality
+require_once YOUTUBESTORE_DIR . '/inc/admin/normalize-data-page.php';
 require_once YOUTUBESTORE_DIR . '/inc/import/import-admin-page.php';
 require_once YOUTUBESTORE_DIR . '/inc/import/channel-import-admin-page.php';
 
@@ -97,19 +98,150 @@ remove_action('wp_head', 'wp_generator');
 // Modify Main Query for Archive
 function youtubestore_modify_archive_query($query)
 {
-    if ($query->is_active_query() && !is_admin() && is_post_type_archive('youtube_channel')) {
-        $query->set('posts_per_page', 12);
+    if ($query->is_main_query() && !is_admin() && is_post_type_archive('youtube_channel')) {
+        // Set posts per page
+        $per_page = isset($_GET['posts_per_page']) ? intval($_GET['posts_per_page']) : 25;
+        $query->set('posts_per_page', $per_page);
+        
+        // Handle sorting
+        $orderby = isset($_GET['orderby']) ? sanitize_text_field($_GET['orderby']) : 'subscribers';
+        $order = isset($_GET['order']) ? strtoupper(sanitize_text_field($_GET['order'])) : 'DESC';
+        
+        // Store orderby in query for use in posts_clauses filter
+        $query->set('youtubestore_orderby', $orderby);
+        $query->set('youtubestore_order', $order);
+        
+        // Default: sort by subscribers DESC
+        if ($orderby === 'subscribers' || $orderby === 'price') {
+            $meta_key = ($orderby === 'subscribers') ? 'subscribers' : 'price';
+            $query->set('meta_key', $meta_key);
+            $query->set('orderby', 'meta_value');
+            $query->set('order', $order);
+            // Add filter to convert string to number
+            add_filter('posts_clauses', 'youtubestore_orderby_numeric_clauses', 20, 2);
+        } elseif ($orderby === 'title') {
+            $query->set('orderby', 'title');
+            $query->set('order', $order);
+        } elseif ($orderby === 'date') {
+            $query->set('orderby', 'date');
+            $query->set('order', $order);
+        } else {
+            // Default: subscribers DESC
+            $query->set('meta_key', 'subscribers');
+            $query->set('orderby', 'meta_value');
+            $query->set('order', 'DESC');
+            add_filter('posts_clauses', 'youtubestore_orderby_numeric_clauses', 20, 2);
+        }
     }
 }
 add_action('pre_get_posts', 'youtubestore_modify_archive_query');
+
+/**
+ * Custom orderby clauses - convert string to number for numeric sorting
+ */
+function youtubestore_orderby_numeric_clauses($clauses, $query)
+{
+    global $wpdb;
+    
+    // Only apply to main query on archive page
+    if (!is_admin() && $query->is_main_query() && is_post_type_archive('youtube_channel')) {
+        $orderby = $query->get('youtubestore_orderby');
+        $order = $query->get('youtubestore_order') ? $query->get('youtubestore_order') : 'DESC';
+        
+        if (in_array($orderby, array('subscribers', 'price'))) {
+            // Replace the orderby clause to cast string to number
+            // Remove dots, commas, spaces, and any non-numeric characters, then cast to UNSIGNED
+            $clauses['orderby'] = "CAST(REPLACE(REPLACE(REPLACE(REPLACE({$wpdb->postmeta}.meta_value, '.', ''), ',', ''), ' ', ''), CHAR(9), '') AS UNSIGNED) " . $order;
+            
+            // Remove filter after use to prevent conflicts
+            remove_filter('posts_clauses', 'youtubestore_orderby_numeric_clauses', 20);
+        }
+    }
+    
+    return $clauses;
+}
+
+/**
+ * Normalize numeric meta values (subscribers, price) from string to integer
+ * This function can be called once to fix existing data
+ */
+function youtubestore_normalize_numeric_meta_values()
+{
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+    
+    $args = array(
+        'post_type' => 'youtube_channel',
+        'posts_per_page' => -1,
+        'post_status' => 'any',
+    );
+    
+    $query = new WP_Query($args);
+    $updated = 0;
+    
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            $post_id = get_the_ID();
+            
+            // Normalize subscribers
+            $subscribers = get_post_meta($post_id, 'subscribers', true);
+            if (!empty($subscribers) && !is_numeric($subscribers)) {
+                $subscribers_clean = preg_replace('/[^\d]/', '', strval($subscribers));
+                $subscribers_num = intval($subscribers_clean);
+                update_post_meta($post_id, 'subscribers', $subscribers_num);
+                if (function_exists('update_field')) {
+                    update_field('subscribers', $subscribers_num, $post_id);
+                }
+                $updated++;
+            } elseif (empty($subscribers)) {
+                update_post_meta($post_id, 'subscribers', 0);
+                if (function_exists('update_field')) {
+                    update_field('subscribers', 0, $post_id);
+                }
+            }
+            
+            // Normalize price
+            $price = get_post_meta($post_id, 'price', true);
+            if (!empty($price) && !is_numeric($price)) {
+                $price_clean = preg_replace('/[^\d]/', '', strval($price));
+                $price_num = intval($price_clean);
+                update_post_meta($post_id, 'price', $price_num);
+                if (function_exists('update_field')) {
+                    update_field('price', $price_num, $post_id);
+                }
+                $updated++;
+            } elseif (empty($price)) {
+                update_post_meta($post_id, 'price', 0);
+                if (function_exists('update_field')) {
+                    update_field('price', 0, $post_id);
+                }
+            }
+        }
+        wp_reset_postdata();
+    }
+    
+    return $updated;
+}
+
+// Uncomment the line below and visit any admin page once to normalize existing data
+// add_action('admin_init', function() { youtubestore_normalize_numeric_meta_values(); });
 
 // SEO Schema
 function youtubestore_schema()
 {
     if (is_singular('youtube_channel')) {
         $post_id = get_the_ID();
-        $price = function_exists('get_field') ? get_field('price') : get_post_meta($post_id, 'price', true);
+        $price_raw = function_exists('get_field') ? get_field('price') : get_post_meta($post_id, 'price', true);
         $status = function_exists('get_field') ? get_field('status') : get_post_meta($post_id, 'status', true);
+        
+        // Ensure price is a number
+        $price = 0;
+        if (!empty($price_raw)) {
+            $price_clean = preg_replace('/[^\d]/', '', strval($price_raw));
+            $price = intval($price_clean);
+        }
         
         $schema = array(
             '@context' => 'https://schema.org',
@@ -119,7 +251,7 @@ function youtubestore_schema()
             'image' => get_the_post_thumbnail_url($post_id, 'full'),
             'offers' => array(
                 '@type' => 'Offer',
-                'price' => $price ? $price : 0,
+                'price' => $price,
                 'priceCurrency' => 'VND',
                 'availability' => ($status === 'sold') ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
             )

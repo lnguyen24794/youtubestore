@@ -370,10 +370,13 @@ get_header();
         <div class="display-options">
             <span style="font-weight: 500;">Hiển thị</span>
             <select id="per-page">
-                <option value="10">10</option>
-                <option value="25" selected>25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
+                <?php
+                $current_per_page = isset($_GET['posts_per_page']) ? intval($_GET['posts_per_page']) : 25;
+                ?>
+                <option value="10" <?php selected($current_per_page, 10); ?>>10</option>
+                <option value="25" <?php selected($current_per_page, 25); ?>>25</option>
+                <option value="50" <?php selected($current_per_page, 50); ?>>50</option>
+                <option value="100" <?php selected($current_per_page, 100); ?>>100</option>
             </select>
             <span style="font-weight: 500;">kênh</span>
         </div>
@@ -417,14 +420,25 @@ get_header();
                         the_post();
                         
                         $subscribers = function_exists('get_field') ? get_field('subscribers') : get_post_meta(get_the_ID(), 'subscribers', true);
-                        $subscribers = $subscribers ? $subscribers : '0';
-                        $subscribers_num = (float) $subscribers;
+                        // Ensure subscribers is a number
+                        $subscribers_num = 0;
+                        if (!empty($subscribers)) {
+                            // Remove any non-numeric characters and convert to integer
+                            $subscribers_clean = preg_replace('/[^\d]/', '', strval($subscribers));
+                            $subscribers_num = intval($subscribers_clean);
+                        }
                         
                         $video_url = function_exists('get_field') ? get_field('video_url') : get_post_meta(get_the_ID(), 'video_url', true);
                         $video_url = $video_url ? $video_url : '#';
                         
                         $price = function_exists('get_field') ? get_field('price') : get_post_meta(get_the_ID(), 'price', true);
-                        $price_num = (float) ($price ? $price : 0);
+                        // Ensure price is a number
+                        $price_num = 0;
+                        if (!empty($price)) {
+                            // Remove any non-numeric characters and convert to integer
+                            $price_clean = preg_replace('/[^\d]/', '', strval($price));
+                            $price_num = intval($price_clean);
+                        }
                         $price_formatted = number_format($price_num, 0, ',', '.');
                         
                         $monetization = function_exists('get_field') ? get_field('monetization') : get_post_meta(get_the_ID(), 'monetization', true);
@@ -553,11 +567,59 @@ get_header();
         }
         ?>
     </div>
+
+    <!-- Content Section from Page Editor -->
+    <?php
+    // Get the archive page content - try by ID 64 first (from admin URL)
+    $archive_page = get_post(64);
+    
+    // If not found or not a page, try by slug
+    if (!$archive_page || $archive_page->post_type !== 'page') {
+        $archive_page = get_page_by_path('mua-kenh-youtube');
+    }
+    
+    // If still not found, try to find page with matching slug/title
+    if (!$archive_page) {
+        $pages = get_pages(array(
+            'post_status' => 'publish',
+        ));
+        foreach ($pages as $page) {
+            if (stripos($page->post_name, 'mua-kenh') !== false || 
+                stripos($page->post_title, 'danh sách kênh') !== false ||
+                stripos($page->post_title, 'mua bán kênh') !== false) {
+                $archive_page = $page;
+                break;
+            }
+        }
+    }
+    
+    if ($archive_page && !empty($archive_page->post_content)):
+        ?>
+        <div class="archive-content-section" style="background: #fff; border-radius: 12px; padding: 30px; margin: 30px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div class="tour-subtitle-wrapper wrapper-content">
+                <?php echo apply_filters('the_content', $archive_page->post_content); ?>
+            </div>
+        </div>
+        <?php
+    endif;
+    ?>
 </div>
 
 <script>
 jQuery(document).ready(function($) {
-    var currentSort = { field: null, direction: 'asc' };
+    // Get current sort from URL
+    var urlParams = new URLSearchParams(window.location.search);
+    var currentOrderby = urlParams.get('orderby') || 'subscribers';
+    var currentOrder = urlParams.get('order') || 'DESC';
+    
+    // Set initial sort indicator
+    $('.channels-table th').each(function() {
+        var sortField = $(this).find('.sort-indicator').data('sort');
+        if (sortField === currentOrderby) {
+            var indicator = currentOrder === 'ASC' ? '↑' : '↓';
+            $(this).find('.sort-indicator').text(indicator);
+        }
+    });
     
     // Copy URL functionality
     $('.btn-copy-url').on('click', function() {
@@ -577,7 +639,7 @@ jQuery(document).ready(function($) {
         }, 2000);
     });
     
-    // Filter function
+    // Filter function (client-side for instant feedback)
     function applyFilters() {
         var priceFrom = parseFloat($('input[name="price_from"]').val()) || 0;
         var priceTo = parseFloat($('input[name="price_to"]').val()) || Infinity;
@@ -633,9 +695,6 @@ jQuery(document).ready(function($) {
         $('#channel-search').val('');
         $('.channels-table tbody tr').show();
         $('.channels-table tbody .no-results').closest('tr').remove();
-        // Reset sort indicators
-        $('.channels-table th .sort-indicator').text('↕');
-        currentSort = { field: null, direction: 'asc' };
     });
     
     // Filter on input change
@@ -657,67 +716,28 @@ jQuery(document).ready(function($) {
         applyFilters();
     });
     
-    // Sort functionality
+    // Sort functionality - Server-side via URL
     $('.channels-table th').on('click', function() {
         var sortField = $(this).find('.sort-indicator').data('sort');
         if (!sortField) return;
         
-        if (currentSort.field === sortField) {
-            currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
-        } else {
-            currentSort.field = sortField;
-            currentSort.direction = 'asc';
+        var url = new URL(window.location.href);
+        var currentOrderbyParam = url.searchParams.get('orderby');
+        var currentOrderParam = url.searchParams.get('order') || 'DESC';
+        
+        // Determine new order
+        var newOrder = 'DESC';
+        if (currentOrderbyParam === sortField) {
+            newOrder = currentOrderParam === 'DESC' ? 'ASC' : 'DESC';
         }
         
-        // Update sort indicators
-        $('.channels-table th .sort-indicator').text('↕');
-        var indicator = currentSort.direction === 'asc' ? '↑' : '↓';
-        $(this).find('.sort-indicator').text(indicator);
+        // Set URL parameters
+        url.searchParams.set('orderby', sortField);
+        url.searchParams.set('order', newOrder);
+        url.searchParams.set('paged', 1); // Reset to page 1 when sorting
         
-        // Sort rows
-        var $rows = $('.channels-table tbody tr:visible').toArray();
-        
-        $rows.sort(function(a, b) {
-            var $a = $(a);
-            var $b = $(b);
-            var valA, valB;
-            
-            switch(sortField) {
-                case 'subscribers':
-                    valA = parseFloat($a.data('subscribers')) || 0;
-                    valB = parseFloat($b.data('subscribers')) || 0;
-                    break;
-                case 'price':
-                    valA = parseFloat($a.data('price')) || 0;
-                    valB = parseFloat($b.data('price')) || 0;
-                    break;
-                case 'category':
-                    valA = $a.data('category').toLowerCase();
-                    valB = $b.data('category').toLowerCase();
-                    break;
-                case 'status':
-                    valA = $a.data('status').toLowerCase();
-                    valB = $b.data('status').toLowerCase();
-                    break;
-                default:
-                    return 0;
-            }
-            
-            if (typeof valA === 'number' && typeof valB === 'number') {
-                return currentSort.direction === 'asc' ? valA - valB : valB - valA;
-            } else {
-                if (valA < valB) return currentSort.direction === 'asc' ? -1 : 1;
-                if (valA > valB) return currentSort.direction === 'asc' ? 1 : -1;
-                return 0;
-            }
-        });
-        
-        // Re-append sorted rows
-        var $tbody = $('.channels-table tbody');
-        $tbody.empty();
-        $.each($rows, function(index, row) {
-            $tbody.append(row);
-        });
+        // Redirect to new URL
+        window.location.href = url.toString();
     });
 });
 </script>

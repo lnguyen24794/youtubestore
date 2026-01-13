@@ -101,14 +101,30 @@ function youtubestore_filter_channels()
                     </h2>
                     <div class="card-meta">
                         <span><span class="dashicons dashicons-groups"></span>
-                            <?php echo esc_html(get_field('subscribers')); ?> Subs
+                            <?php
+                            $subscribers_raw = get_field('subscribers');
+                            $subscribers = 0;
+                            if (!empty($subscribers_raw)) {
+                                $subscribers_clean = preg_replace('/[^\d]/', '', strval($subscribers_raw));
+                                $subscribers = intval($subscribers_clean);
+                            }
+                            echo esc_html(number_format($subscribers, 0, ',', '.')); 
+                            ?> Subs
                         </span>
                         <?php if (get_field('monetization') === 'yes'): ?>
                             <span class="monetized" title="Monetized">$</span>
                         <?php endif; ?>
                     </div>
                     <div class="card-price">
-                        <?php echo number_format((float) get_field('price'), 0, ',', '.'); ?> đ
+                        <?php
+                        $price_raw = get_field('price');
+                        $price = 0;
+                        if (!empty($price_raw)) {
+                            $price_clean = preg_replace('/[^\d]/', '', strval($price_raw));
+                            $price = intval($price_clean);
+                        }
+                        echo number_format($price, 0, ',', '.'); 
+                        ?> đ
                     </div>
                 </div>
             </a>

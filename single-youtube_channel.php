@@ -342,8 +342,23 @@ get_header();
                         
                         <?php
                         $video_url = function_exists('get_field') ? get_field('video_url') : get_post_meta(get_the_ID(), 'video_url', true);
-                        $subscribers = function_exists('get_field') ? get_field('subscribers') : get_post_meta(get_the_ID(), 'subscribers', true);
-                        $price = function_exists('get_field') ? get_field('price') : get_post_meta(get_the_ID(), 'price', true);
+                        
+                        // Get subscribers and ensure it's a number
+                        $subscribers_raw = function_exists('get_field') ? get_field('subscribers') : get_post_meta(get_the_ID(), 'subscribers', true);
+                        $subscribers = 0;
+                        if (!empty($subscribers_raw)) {
+                            $subscribers_clean = preg_replace('/[^\d]/', '', strval($subscribers_raw));
+                            $subscribers = intval($subscribers_clean);
+                        }
+                        
+                        // Get price and ensure it's a number
+                        $price_raw = function_exists('get_field') ? get_field('price') : get_post_meta(get_the_ID(), 'price', true);
+                        $price = 0;
+                        if (!empty($price_raw)) {
+                            $price_clean = preg_replace('/[^\d]/', '', strval($price_raw));
+                            $price = intval($price_clean);
+                        }
+                        
                         $monetization = function_exists('get_field') ? get_field('monetization') : get_post_meta(get_the_ID(), 'monetization', true);
                         $status = function_exists('get_field') ? get_field('status') : get_post_meta(get_the_ID(), 'status', true);
                         
@@ -429,11 +444,11 @@ get_header();
                             <table class="channel-info-table">
                                 <tr>
                                     <td class="channel-info-label">Lượng subscribers:</td>
-                                    <td class="channel-info-value"><?php echo esc_html(number_format((float) ($subscribers ? $subscribers : 0), 0, ',', '.')); ?></td>
+                                    <td class="channel-info-value"><?php echo esc_html(number_format($subscribers, 0, ',', '.')); ?></td>
                                 </tr>
                                 <tr>
                                     <td class="channel-info-label">Giá bán:</td>
-                                    <td class="channel-info-value price"><?php echo esc_html(number_format((float) ($price ? $price : 0), 0, ',', '.')); ?> VND</td>
+                                    <td class="channel-info-value price"><?php echo esc_html(number_format($price, 0, ',', '.')); ?> VND</td>
                                 </tr>
                                 <tr>
                                     <td class="channel-info-label">Tình trạng kiếm tiền:</td>
@@ -512,7 +527,12 @@ get_header();
                                     <?php
                                     while ($related->have_posts()):
                                         $related->the_post();
-                                        $related_price = function_exists('get_field') ? get_field('price') : get_post_meta(get_the_ID(), 'price', true);
+                                        $related_price_raw = function_exists('get_field') ? get_field('price') : get_post_meta(get_the_ID(), 'price', true);
+                                        $related_price = 0;
+                                        if (!empty($related_price_raw)) {
+                                            $related_price_clean = preg_replace('/[^\d]/', '', strval($related_price_raw));
+                                            $related_price = intval($related_price_clean);
+                                        }
                                         ?>
                                         <a href="<?php the_permalink(); ?>" class="related-channel-card">
                                             <div class="related-channel-thumb">
@@ -525,7 +545,7 @@ get_header();
                                             <div class="related-channel-body">
                                                 <h3 class="related-channel-title"><?php the_title(); ?></h3>
                                                 <div class="related-channel-price">
-                                                    <?php echo number_format((float) ($related_price ? $related_price : 0), 0, ',', '.'); ?> VND
+                                                    <?php echo number_format($related_price, 0, ',', '.'); ?> VND
                                                 </div>
                                             </div>
                                         </a>

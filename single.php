@@ -5,17 +5,13 @@
     <section class="tour" id="grid-hero">
         <div class="container">
             <div class="row">
-                <div class="col-md-8 tour-content">
+                <div class="col-md-8 col-12">
                     <?php while (have_posts()):
                         the_post(); ?>
-                        <h1>
+                        <h1 style="margin-bottom: 20px;">
                             <?php the_title(); ?>
                         </h1>
-
-                        <?php if (has_post_thumbnail()): ?>
-                            <?php the_post_thumbnail('full', ['class' => 'tour-image']); ?>
-                        <?php endif; ?>
-
+                        
                         <div class="tour-subtitle-wrapper wrapper-content">
                             <?php the_content(); ?>
                         </div>
@@ -28,7 +24,7 @@
                         </div>
 
                         <div class="tour-contact-wrapper">
-                            <div class="btn-normal" style="margin-top: 10px;">
+                            <div class="btn-normal" style="margin: 30px;">
                                 <a style="background: #4F4F4F; border-radius: 24px;"
                                     href="<?php echo home_url('/lien-he'); ?>">
                                     <span style="color: white !important; visibility: visible;" class="btn-normal__title">

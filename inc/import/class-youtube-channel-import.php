@@ -169,24 +169,37 @@ class YoutubeStore_Channel_Import
     }
 
     /**
-     * Normalize subscriber count
+     * Normalize subscriber count - return as integer
      */
     private function normalize_subscribers($subscribers)
     {
         if (empty($subscribers)) {
-            return '0';
+            return 0;
         }
 
-        // Remove dots and commas
-        $subscribers = str_replace(array('.', ','), '', $subscribers);
+        // Remove dots, commas, and any non-numeric characters
+        $subscribers = str_replace(array('.', ',', ' '), '', $subscribers);
         
-        // Extract number
-        preg_match('/(\d+)/', $subscribers, $matches);
+        // Extract number (handle K, M suffixes)
+        $subscribers = strtolower(trim($subscribers));
+        $multiplier = 1;
+        
+        if (strpos($subscribers, 'k') !== false) {
+            $multiplier = 1000;
+            $subscribers = str_replace('k', '', $subscribers);
+        } elseif (strpos($subscribers, 'm') !== false) {
+            $multiplier = 1000000;
+            $subscribers = str_replace('m', '', $subscribers);
+        }
+        
+        // Extract numeric value
+        preg_match('/([\d.]+)/', $subscribers, $matches);
         if (isset($matches[1])) {
-            return $matches[1];
+            $value = floatval($matches[1]) * $multiplier;
+            return intval($value);
         }
 
-        return '0';
+        return 0;
     }
 
     /**
@@ -311,28 +324,32 @@ class YoutubeStore_Channel_Import
                     $imported++;
                 }
 
+                // Ensure subscribers and price are integers (not strings)
+                $subscribers = intval($subscribers);
+                $price = intval($price);
+                
                 // Update ACF fields - check field names from acf-fields.php
-                // ACF field names: channel_id, price, subscribers, monetization_status, status, video_url
+                // ACF field names: channel_id, price, subscribers, monetization, status, video_url
                 if (function_exists('update_field')) {
                     // Use ACF field names
                     update_field('video_url', $video_url, $post_id);
                     update_field('subscribers', $subscribers, $post_id);
                     update_field('price', $price, $post_id);
-                    update_field('monetization_status', $monetization, $post_id);
+                    update_field('monetization', $monetization, $post_id);
                     update_field('status', $status, $post_id);
                     
-                    // Also update post meta as fallback
+                    // Also update post meta as fallback (ensure numeric)
                     update_post_meta($post_id, 'video_url', $video_url);
                     update_post_meta($post_id, 'subscribers', $subscribers);
                     update_post_meta($post_id, 'price', $price);
-                    update_post_meta($post_id, 'monetization_status', $monetization);
+                    update_post_meta($post_id, 'monetization', $monetization);
                     update_post_meta($post_id, 'status', $status);
                 } else {
-                    // Fallback to post meta only
+                    // Fallback to post meta only (ensure numeric)
                     update_post_meta($post_id, 'video_url', $video_url);
                     update_post_meta($post_id, 'subscribers', $subscribers);
                     update_post_meta($post_id, 'price', $price);
-                    update_post_meta($post_id, 'monetization_status', $monetization);
+                    update_post_meta($post_id, 'monetization', $monetization);
                     update_post_meta($post_id, 'status', $status);
                 }
 

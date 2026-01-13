@@ -49,8 +49,8 @@ if (function_exists('acf_add_local_field_group')):
                 'key' => 'field_channel_subscribers',
                 'label' => 'Subscribers',
                 'name' => 'subscribers',
-                'type' => 'text',
-                'instructions' => 'Number of subscribers (e.g. 100K)',
+                'type' => 'number',
+                'instructions' => 'Number of subscribers (numeric value only)',
                 'required' => 0,
                 'conditional_logic' => 0,
                 'wrapper' => array(
@@ -62,7 +62,9 @@ if (function_exists('acf_add_local_field_group')):
                 'placeholder' => '',
                 'prepend' => '',
                 'append' => '',
-                'maxlength' => '',
+                'min' => 0,
+                'max' => '',
+                'step' => 1,
             ),
             array(
                 'key' => 'field_channel_monetization',
