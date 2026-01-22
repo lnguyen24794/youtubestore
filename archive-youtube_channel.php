@@ -243,19 +243,24 @@ get_header();
 .pagination-wrapper {
     margin: 40px 0;
     display: flex;
+    flex-direction: row;
     justify-content: center;
 }
 
 .pagination {
     display: flex;
+    flex-direction: row;
     gap: 8px;
     list-style: none;
     padding: 0;
     margin: 0;
+    align-items: center;
 }
 
 .pagination li {
     margin: 0;
+    display: inline-block;
+    flex-shrink: 0;
 }
 
 .pagination a,
