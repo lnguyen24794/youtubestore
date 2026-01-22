@@ -143,12 +143,6 @@
                         <span>Tiếng Việt</span>
                     </a>
                 </li>
-                <li>
-                    <a href="<?php echo home_url('/en'); ?>">
-                        <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/flag_en.png" alt="English">
-                        <span>Tiếng Anh</span>
-                    </a>
-                </li>
             </ul>
         </div>
     </div>
