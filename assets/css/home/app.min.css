@@ -4371,6 +4371,7 @@ footer .footer-content .footer-list {
   line-height: 1.8;
   letter-spacing: 0.2px;
   color: #FFFFFF;
+  padding-left: 0px;
 }
 
 footer .footer-content .footer-list li {
