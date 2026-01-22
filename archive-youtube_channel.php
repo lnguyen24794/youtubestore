@@ -442,16 +442,38 @@ get_header();
                         $price_formatted = number_format($price_num, 0, ',', '.');
                         
                         $monetization = function_exists('get_field') ? get_field('monetization') : get_post_meta(get_the_ID(), 'monetization', true);
+                        
+                        // Determine status text and class from monetization field
+                        // Monetization field can be: 'yes', 'no', 'Đã bật kiếm tiền', 'Chưa bật kiếm tiền', 'Tắt kiếm tiền'
                         $status_text = 'Chưa bật kiếm tiền';
                         $status_class = 'not-monetized';
-                        if ($monetization === 'yes' || $monetization === 'Đã bật kiếm tiền') {
-                            $status_text = 'Đã bật kiếm tiền';
-                            $status_class = 'monetized';
-                        } elseif ($monetization === 'Tắt kiếm tiền') {
-                            $status_text = 'Tắt kiếm tiền';
-                            $status_class = 'not-monetized';
+                        
+                        if (!empty($monetization)) {
+                            $monetization_lower = strtolower(trim($monetization));
+                            
+                            // Check for "Chưa bật kiếm tiền" FIRST (before checking "bật kiếm tiền")
+                            if (strpos($monetization, 'Chưa bật') !== false || 
+                                $monetization_lower === 'no' ||
+                                $monetization_lower === '0') {
+                                $status_text = 'Chưa bật kiếm tiền';
+                                $status_class = 'not-monetized';
+                            } elseif (strpos($monetization, 'Đã bật') !== false || 
+                                     strpos($monetization, 'bật kiếm tiền') !== false ||
+                                     $monetization_lower === 'yes' ||
+                                     $monetization_lower === '1') {
+                                $status_text = 'Đã bật kiếm tiền';
+                                $status_class = 'monetized';
+                            } elseif (strpos($monetization, 'Tắt') !== false || 
+                                     strpos($monetization, 'tắt kiếm tiền') !== false) {
+                                $status_text = 'Tắt kiếm tiền';
+                                $status_class = 'not-monetized';
+                            } else {
+                                // Use the value as-is if it's already Vietnamese text
+                                $status_text = $monetization;
+                            }
                         }
                         
+                        // Override with channel status if sold
                         $channel_status = function_exists('get_field') ? get_field('status') : get_post_meta(get_the_ID(), 'status', true);
                         if ($channel_status === 'sold' || $channel_status === 'Đã bán') {
                             $status_text = 'Đã bán';
@@ -504,7 +526,7 @@ get_header();
                                 <?php echo esc_html(number_format($subscribers_num, 0, ',', '.')); ?>
                             </td>
                             
-                            <td>
+                            <td class="channel-link-value">
                                 <div class="channel-actions">
                                     <a href="<?php echo esc_url($video_url); ?>" target="_blank" class="btn-channel btn-view">Xem kênh</a>
                                     <button type="button" class="btn-channel btn-copy btn-copy-url" data-url="<?php echo esc_attr($video_url); ?>">Sao chép</button>

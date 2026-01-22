@@ -136,25 +136,9 @@ function youtubestore_generate_toc($content, $post_id = null)
     $toc_html .= '</div>';
     $toc_html .= '</div>';
 
-    // Insert TOC after first paragraph or at the beginning
-    $toc_position = apply_filters('youtubestore_toc_position', 'after_first_paragraph');
-    
-    if ($toc_position === 'after_first_paragraph') {
-        // Find first paragraph
-        $first_p = strpos($content, '<p>');
-        if ($first_p !== false) {
-            $first_p_end = strpos($content, '</p>', $first_p);
-            if ($first_p_end !== false) {
-                $content = substr_replace($content, $toc_html, $first_p_end + 4, 0);
-            } else {
-                $content = $toc_html . $content;
-            }
-        } else {
-            $content = $toc_html . $content;
-        }
-    } else {
-        $content = $toc_html . $content;
-    }
+    // Insert TOC at the beginning of content (right after title)
+    // This ensures TOC always appears below the title, regardless of content structure
+    $content = $toc_html . $content;
 
     return $content;
 }

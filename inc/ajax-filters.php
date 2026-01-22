@@ -111,7 +111,21 @@ function youtubestore_filter_channels()
                             echo esc_html(number_format($subscribers, 0, ',', '.')); 
                             ?> Subs
                         </span>
-                        <?php if (get_field('monetization') === 'yes'): ?>
+                        <?php 
+                        $monetization = get_field('monetization');
+                        $is_monetized = false;
+                        if (!empty($monetization)) {
+                            $monetization_lower = strtolower(trim($monetization));
+                            // Check for monetized status (but not "Chưa bật")
+                            if ((strpos($monetization, 'Đã bật') !== false || 
+                                 strpos($monetization, 'bật kiếm tiền') !== false ||
+                                 $monetization_lower === 'yes' ||
+                                 $monetization_lower === '1') &&
+                                strpos($monetization, 'Chưa bật') === false) {
+                                $is_monetized = true;
+                            }
+                        }
+                        if ($is_monetized): ?>
                             <span class="monetized" title="Monetized">$</span>
                         <?php endif; ?>
                     </div>

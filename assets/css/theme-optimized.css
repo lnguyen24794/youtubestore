@@ -486,6 +486,172 @@
     }
 
     .search-controls input {
-        min-width: 100%;
+        min-width: 50%;
     }
+
+    /* Mobile Table Responsive - Auto resize to fit screen */
+    .archive-content-section {
+        padding: 15px !important;
+        box-sizing: border-box;
+    }
+
+    .channels-table-wrapper {
+        overflow-x: visible !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 0 !important;
+    }
+
+    .channels-table {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        table-layout: fixed !important;
+        font-size: 10px;
+        box-sizing: border-box !important;
+    }
+
+    .channels-table th,
+    .channels-table td {
+        padding: 6px 2px !important;
+        font-size: 10px !important;
+        word-wrap: break-word;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        box-sizing: border-box;
+    }
+
+    .channels-table th {
+        font-size: 9px !important;
+        font-weight: 600;
+        padding: 6px 2px !important;
+    }
+
+    /* Limit width of specific columns on mobile - optimized for 375px screen */
+    /* Total: 12% + 18% + 15% + 30% + 25% = 100% */
+    .channels-table th:first-child,
+    .channels-table td.subscribers-value {
+        width: 12% !important;
+        max-width: 12% !important;
+    }
+
+    .channels-table th:nth-child(2),
+    .channels-table td.channel-link-value {
+        width: 18% !important;
+        max-width: 18% !important;
+    }
+
+    .channels-table th:nth-child(3),
+    .channels-table td.category-value {
+        width: 15% !important;
+        max-width: 15% !important;
+    }
+
+    .channels-table th:nth-child(4),
+    .channels-table td.price-value {
+        width: 30% !important;
+        max-width: 30% !important;
+    }
+
+    .channels-table th:nth-child(5),
+    .channels-table td.status-value {
+        width: 25% !important;
+        max-width: 25% !important;
+    }
+
+    /* Hide sort indicator on mobile to save space */
+    .channels-table .sort-indicator {
+        display: none;
+    }
+
+    /* Adjust button sizes on mobile */
+    .channel-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: auto;
+    }
+
+    .channel-actions .btn-channel {
+        padding: 3px 4px !important;
+        font-size: 9px !important;
+        white-space: nowrap;
+        min-width: auto;
+    }
+
+    .channel-price-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        align-items: flex-start;
+        min-width: auto;
+    }
+
+    .channel-price-wrapper span {
+        font-size: 9px !important;
+    }
+
+    .channel-price-wrapper .btn-order {
+        padding: 3px 4px !important;
+        font-size: 9px !important;
+        white-space: nowrap;
+        min-width: auto;
+    }
+
+    .status-badge {
+        font-size: 8px !important;
+        padding: 2px 4px !important;
+    }
+
+    /* Allow text to wrap in cells if needed */
+    .channels-table td.subscribers-value,
+    .channels-table td.category-value,
+    .channels-table td.status-value {
+        word-wrap: break-word;
+        white-space: normal;
+        font-size: 9px !important;
+    }
+
+    /* Ensure table fits container */
+    .channels-table tbody tr {
+        max-width: 100%;
+    }
+}
+
+.wrapper-content h1{
+    margin-bottom: 25px;
+}
+.wrapper-content h2{
+    margin-bottom: 15px;
+}
+.wrapper-content h3, h4, h5, h6{
+    margin-bottom: 10px;
+}
+
+.wrapper-content img{
+    margin-bottom: 10px;
+}
+
+.wrapper-content ol, ul {
+    margin-bottom: 20px;
+    padding-left: 20px;
+}
+
+.wrapper-content li{
+    margin-bottom: 10px;
+}
+
+.wrapper-content p{
+    margin-bottom: 20px;
+}
+
+.wrapper-content blockquote{
+    margin-bottom: 20px;
+}
+
+.wrapper-content table{
+    margin-bottom: 20px;
 }

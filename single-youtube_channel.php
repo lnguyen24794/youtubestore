@@ -377,10 +377,32 @@ get_header();
                         // Status text and class
                         $status_text = 'Chưa bật kiếm tiền';
                         $status_class = 'not-monetized';
-                        if ($monetization === 'yes' || $monetization === 'Đã bật kiếm tiền') {
-                            $status_text = 'Đã bật kiếm tiền';
-                            $status_class = 'monetized';
+                        
+                        if (!empty($monetization)) {
+                            $monetization_lower = strtolower(trim($monetization));
+                            
+                            // Check for "Chưa bật kiếm tiền" FIRST (before checking "bật kiếm tiền")
+                            if (strpos($monetization, 'Chưa bật') !== false || 
+                                $monetization_lower === 'no' ||
+                                $monetization_lower === '0') {
+                                $status_text = 'Chưa bật kiếm tiền';
+                                $status_class = 'not-monetized';
+                            } elseif (strpos($monetization, 'Đã bật') !== false || 
+                                     strpos($monetization, 'bật kiếm tiền') !== false ||
+                                     $monetization_lower === 'yes' ||
+                                     $monetization_lower === '1') {
+                                $status_text = 'Đã bật kiếm tiền';
+                                $status_class = 'monetized';
+                            } elseif (strpos($monetization, 'Tắt') !== false || 
+                                     strpos($monetization, 'tắt kiếm tiền') !== false) {
+                                $status_text = 'Tắt kiếm tiền';
+                                $status_class = 'not-monetized';
+                            } else {
+                                // Use the value as-is if it's already Vietnamese text
+                                $status_text = $monetization;
+                            }
                         }
+                        
                         if ($status === 'sold' || $status === 'Đã bán') {
                             $status_text = 'Đã bán';
                             $status_class = 'sold';

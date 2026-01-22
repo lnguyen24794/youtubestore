@@ -80,8 +80,11 @@ if (function_exists('acf_add_local_field_group')):
                     'id' => '',
                 ),
                 'choices' => array(
-                    'yes' => 'Yes',
-                    'no' => 'No',
+                    'Đã bật kiếm tiền' => 'Đã bật kiếm tiền',
+                    'Chưa bật kiếm tiền' => 'Chưa bật kiếm tiền',
+                    'Tắt kiếm tiền' => 'Tắt kiếm tiền',
+                    'yes' => 'Yes (Đã bật kiếm tiền)',
+                    'no' => 'No (Chưa bật kiếm tiền)',
                 ),
                 'default_value' => array(
                 ),

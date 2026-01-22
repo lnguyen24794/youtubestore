@@ -219,22 +219,41 @@ class YoutubeStore_Channel_Import
 
     /**
      * Normalize monetization status
+     * Returns Vietnamese text for proper display
      */
     private function normalize_monetization($status)
     {
         if (empty($status)) {
-            return 'no';
+            return 'Chưa bật kiếm tiền';
         }
 
-        $status_lower = strtolower($status);
+        $status_trimmed = trim($status);
+        $status_lower = strtolower($status_trimmed);
+        
+        // Check for "Chưa bật kiếm tiền" FIRST (before checking "bật kiếm tiền")
+        if (strpos($status_lower, 'chưa bật') !== false ||
+            $status_lower === 'no' ||
+            $status_lower === '0') {
+            return 'Chưa bật kiếm tiền';
+        }
+        
+        // Check for "Đã bật kiếm tiền" or similar
         if (strpos($status_lower, 'đã bật') !== false || 
             strpos($status_lower, 'bật kiếm tiền') !== false ||
-            strpos($status_lower, 'yes') !== false ||
-            strpos($status_lower, 'enabled') !== false) {
-            return 'yes';
+            $status_lower === 'yes' ||
+            $status_lower === 'enabled' ||
+            $status_lower === '1') {
+            return 'Đã bật kiếm tiền';
+        }
+        
+        // Check for "Tắt kiếm tiền"
+        if (strpos($status_lower, 'tắt') !== false || 
+            strpos($status_lower, 'disabled') !== false) {
+            return 'Tắt kiếm tiền';
         }
 
-        return 'no';
+        // Default to "Chưa bật kiếm tiền"
+        return 'Chưa bật kiếm tiền';
     }
 
     /**
