@@ -15,6 +15,7 @@ get_header();
 
 .page-header-section {
     margin-bottom: 30px;
+    padding: 0 10px;
 }
 
 .page-title {
@@ -22,6 +23,16 @@ get_header();
     font-weight: 700;
     color: #333;
     margin-bottom: 15px;
+}
+
+@media screen and (max-width: 768px) {
+    .page-title {
+        font-size: 20px;
+    }
+
+    .page-commitment {
+        font-size: 14px;
+    }
 }
 
 .page-commitment {
@@ -32,10 +43,175 @@ get_header();
 
 .top-filter-section {
     background: #f8f9fa;
-    padding: 25px;
+    padding: 30px;
     margin: 30px 0;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filter-container {
+    width: 100%;
+}
+
+.filter-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.filter-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.filter-value {
+    color: #dc3545;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.range-slider-wrapper {
+    position: relative;
+    height: 50px;
+    margin: 10px 0;
+}
+
+.range-slider {
+    position: absolute;
+    width: 100%;
+    height: 6px;
+    background: none;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #dc3545;
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: all;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+
+.range-slider::-webkit-slider-thumb:hover {
+    background: #c82333;
+    transform: scale(1.1);
+}
+
+.range-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #dc3545;
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: all;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+
+.range-slider::-moz-range-thumb:hover {
+    background: #c82333;
+    transform: scale(1.1);
+}
+
+.range-track {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: #ddd;
+    border-radius: 3px;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.range-track::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: #dc3545;
+    border-radius: 3px;
+    z-index: 1;
+}
+
+.range-inputs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.range-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: center;
+    transition: border-color 0.2s ease;
+}
+
+.range-input:focus {
+    outline: none;
+    border-color: #dc3545;
+}
+
+.range-inputs span {
+    color: #666;
+    font-weight: 600;
+}
+
+.filter-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.btn-filter {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-reset {
+    background: #6c757d;
+    color: #fff;
+}
+
+.btn-reset:hover {
+    background: #5a6268;
+    color: #fff;
 }
 
 .filter-controls {
@@ -89,12 +265,14 @@ get_header();
     text-align: left;
     font-weight: 600;
     font-size: 14px;
-    text-transform: uppercase;
+    text-transform: capitalize;
     letter-spacing: 0.5px;
     cursor: pointer;
     user-select: none;
     position: relative;
     vertical-align: top;
+    color: white;
+    text-align: center;
 }
 
 .channels-table th:hover {
@@ -125,6 +303,7 @@ get_header();
     vertical-align: middle;
     font-size: 14px;
     color: #333;
+    text-align: center;
 }
 
 .channels-table .subscribers-value {
@@ -135,16 +314,19 @@ get_header();
 .channels-table .category-value {
     font-weight: 500;
     color: #555;
+    text-transform: capitalize;
 }
 
 .channels-table .price-value {
     font-weight: 700;
     color: #dc3545;
     font-size: 16px;
+    text-align: center;
 }
 
 .channels-table .status-value {
     font-size: 13px;
+    text-transform: capitalize;
 }
 
 .status-badge {
@@ -153,7 +335,7 @@ get_header();
     border-radius: 20px;
     font-size: 12px;
     font-weight: 600;
-    text-transform: uppercase;
+    text-transform: capitalize;
 }
 
 .status-badge.monetized {
@@ -188,6 +370,7 @@ get_header();
     text-decoration: none;
     display: inline-block;
     white-space: nowrap;
+    text-align: center;
 }
 
 .btn-view {
@@ -213,6 +396,7 @@ get_header();
 .btn-order {
     background: #ffc107;
     color: #000;
+    display: inline-block;
 }
 
 .btn-order:hover {
@@ -296,6 +480,9 @@ get_header();
 }
 
 @media (max-width: 768px) {
+    .channel-archive-page {
+        margin-bottom: 30px;
+    }
     .channels-table-wrapper {
         overflow-x: auto;
     }
@@ -317,8 +504,13 @@ get_header();
         flex-direction: column;
     }
     
-    .btn-channel {
-        width: 100%;
+    .filter-row {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    
+    .top-filter-section {
+        padding: 20px;
     }
 }
 </style>
@@ -335,39 +527,162 @@ get_header();
     </div>
 
     <!-- Top Filter Section -->
+    <?php
+    // Get min/max values for sliders
+    global $wpdb;
+    $price_min = 0;
+    $price_max = 0;
+    $subscribers_min = 0;
+    $subscribers_max = 0;
+    
+    $price_results = $wpdb->get_row("
+        SELECT 
+            MIN(CAST(REPLACE(REPLACE(REPLACE(REPLACE(pm.meta_value, '.', ''), ',', ''), ' ', ''), CHAR(9), '') AS UNSIGNED)) as min_val,
+            MAX(CAST(REPLACE(REPLACE(REPLACE(REPLACE(pm.meta_value, '.', ''), ',', ''), ' ', ''), CHAR(9), '') AS UNSIGNED)) as max_val
+        FROM {$wpdb->postmeta} pm
+        INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID
+        WHERE pm.meta_key = 'price' 
+        AND p.post_type = 'youtube_channel' 
+        AND p.post_status = 'publish'
+        AND pm.meta_value != '' 
+        AND pm.meta_value IS NOT NULL
+    ");
+    
+    if ($price_results) {
+        $price_min = intval($price_results->min_val) ?: 0;
+        $price_max = intval($price_results->max_val) ?: 1000000;
+    } else {
+        $price_max = 1000000;
+    }
+    
+    $subscribers_results = $wpdb->get_row("
+        SELECT 
+            MIN(CAST(REPLACE(REPLACE(REPLACE(REPLACE(pm.meta_value, '.', ''), ',', ''), ' ', ''), CHAR(9), '') AS UNSIGNED)) as min_val,
+            MAX(CAST(REPLACE(REPLACE(REPLACE(REPLACE(pm.meta_value, '.', ''), ',', ''), ' ', ''), CHAR(9), '') AS UNSIGNED)) as max_val
+        FROM {$wpdb->postmeta} pm
+        INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID
+        WHERE pm.meta_key = 'subscribers' 
+        AND p.post_type = 'youtube_channel' 
+        AND p.post_status = 'publish'
+        AND pm.meta_value != '' 
+        AND pm.meta_value IS NOT NULL
+    ");
+    
+    if ($subscribers_results) {
+        $subscribers_min = intval($subscribers_results->min_val) ?: 0;
+        $subscribers_max = intval($subscribers_results->max_val) ?: 1000000;
+    } else {
+        $subscribers_max = 1000000;
+    }
+    
+    // Get current filter values from URL
+    $current_price_from = isset($_GET['price_from']) ? intval($_GET['price_from']) : $price_min;
+    $current_price_to = isset($_GET['price_to']) ? intval($_GET['price_to']) : $price_max;
+    $current_subscribers_from = isset($_GET['subscribers_from']) ? intval($_GET['subscribers_from']) : $subscribers_min;
+    $current_subscribers_to = isset($_GET['subscribers_to']) ? intval($_GET['subscribers_to']) : $subscribers_max;
+    ?>
     <section class="top-filter-section">
-        <form id="top-filter-form">
-            <div class="filter-group">
-                <label>Giá (VND):</label>
-                <div>
-                    <div>
-                        <label>Từ</label>
-                        <input type="number" name="price_from" value="0" min="0">
+        <div class="filter-container">
+            <div class="filter-row">
+                <div class="filter-item">
+                    <label class="filter-label">
+                        <span>Giá (VND)</span>
+                        <span class="filter-value" id="price-value">
+                            <?php echo number_format($current_price_from, 0, ',', '.'); ?> - <?php echo number_format($current_price_to, 0, ',', '.'); ?>
+                        </span>
+                    </label>
+                    <div class="range-slider-wrapper">
+                        <input type="range" 
+                               id="price-slider-from" 
+                               class="range-slider"
+                               min="<?php echo esc_attr($price_min); ?>" 
+                               max="<?php echo esc_attr($price_max); ?>" 
+                               value="<?php echo esc_attr($current_price_from); ?>"
+                               data-type="price"
+                               data-side="from">
+                        <input type="range" 
+                               id="price-slider-to" 
+                               class="range-slider"
+                               min="<?php echo esc_attr($price_min); ?>" 
+                               max="<?php echo esc_attr($price_max); ?>" 
+                               value="<?php echo esc_attr($current_price_to); ?>"
+                               data-type="price"
+                               data-side="to">
+                        <div class="range-track"></div>
                     </div>
-                    <div>
-                        <label>Đến</label>
-                        <input type="number" name="price_to" value="0" min="0">
+                    <div class="range-inputs">
+                        <input type="number" 
+                               id="price-input-from" 
+                               class="range-input"
+                               min="<?php echo esc_attr($price_min); ?>" 
+                               max="<?php echo esc_attr($price_max); ?>" 
+                               value="<?php echo esc_attr($current_price_from); ?>"
+                               data-type="price"
+                               data-side="from">
+                        <span>-</span>
+                        <input type="number" 
+                               id="price-input-to" 
+                               class="range-input"
+                               min="<?php echo esc_attr($price_min); ?>" 
+                               max="<?php echo esc_attr($price_max); ?>" 
+                               value="<?php echo esc_attr($current_price_to); ?>"
+                               data-type="price"
+                               data-side="to">
+                    </div>
+                </div>
+                
+                <div class="filter-item">
+                    <label class="filter-label">
+                        <span>Lượng Subscribers</span>
+                        <span class="filter-value" id="subscribers-value">
+                            <?php echo number_format($current_subscribers_from, 0, ',', '.'); ?> - <?php echo number_format($current_subscribers_to, 0, ',', '.'); ?>
+                        </span>
+                    </label>
+                    <div class="range-slider-wrapper">
+                        <input type="range" 
+                               id="subscribers-slider-from" 
+                               class="range-slider"
+                               min="<?php echo esc_attr($subscribers_min); ?>" 
+                               max="<?php echo esc_attr($subscribers_max); ?>" 
+                               value="<?php echo esc_attr($current_subscribers_from); ?>"
+                               data-type="subscribers"
+                               data-side="from">
+                        <input type="range" 
+                               id="subscribers-slider-to" 
+                               class="range-slider"
+                               min="<?php echo esc_attr($subscribers_min); ?>" 
+                               max="<?php echo esc_attr($subscribers_max); ?>" 
+                               value="<?php echo esc_attr($current_subscribers_to); ?>"
+                               data-type="subscribers"
+                               data-side="to">
+                        <div class="range-track"></div>
+                    </div>
+                    <div class="range-inputs">
+                        <input type="number" 
+                               id="subscribers-input-from" 
+                               class="range-input"
+                               min="<?php echo esc_attr($subscribers_min); ?>" 
+                               max="<?php echo esc_attr($subscribers_max); ?>" 
+                               value="<?php echo esc_attr($current_subscribers_from); ?>"
+                               data-type="subscribers"
+                               data-side="from">
+                        <span>-</span>
+                        <input type="number" 
+                               id="subscribers-input-to" 
+                               class="range-input"
+                               min="<?php echo esc_attr($subscribers_min); ?>" 
+                               max="<?php echo esc_attr($subscribers_max); ?>" 
+                               value="<?php echo esc_attr($current_subscribers_to); ?>"
+                               data-type="subscribers"
+                               data-side="to">
                     </div>
                 </div>
             </div>
-            <div class="filter-group">
-                <label>Lượng subscribers:</label>
-                <div>
-                    <div>
-                        <label>Từ</label>
-                        <input type="number" name="subscribers_from" value="0" min="0">
-                    </div>
-                    <div>
-                        <label>Đến</label>
-                        <input type="number" name="subscribers_to" value="0" min="0">
-                    </div>
-                </div>
+            
+            <div class="filter-actions">
+                <button type="button" id="reset-filter" class="btn-filter btn-reset">Đặt lại</button>
             </div>
-            <div class="filter-buttons">
-                <button type="button" id="reset-filter" class="btn btn-warning">Hủy bỏ</button>
-                <button type="submit" class="btn btn-success">Lọc</button>
-            </div>
-        </form>
+        </div>
     </section>
 
     <!-- Display Options and Search -->
@@ -475,6 +790,10 @@ get_header();
                             } else {
                                 // Use the value as-is if it's already Vietnamese text
                                 $status_text = $monetization;
+                                // Normalize if all uppercase
+                                if (strtoupper($status_text) === $status_text && $status_text !== strtolower($status_text)) {
+                                    $status_text = strtolower($status_text);
+                                }
                             }
                         }
                         
@@ -485,11 +804,20 @@ get_header();
                             $status_class = 'sold';
                         }
                         
+                        // Normalize status text if all uppercase (CSS will handle capitalize)
+                        if (strtoupper($status_text) === $status_text && $status_text !== strtolower($status_text)) {
+                            $status_text = strtolower($status_text);
+                        }
+                        
                         // Get categories
                         $categories = get_the_terms(get_the_ID(), 'category');
                         $category_name = 'N/A';
                         if ($categories && !is_wp_error($categories)) {
                             $category_name = $categories[0]->name;
+                            // Normalize if all uppercase
+                            if (strtoupper($category_name) === $category_name && $category_name !== strtolower($category_name)) {
+                                $category_name = strtolower($category_name);
+                            }
                         }
                         
                         // Get order page URL
@@ -621,10 +949,13 @@ get_header();
     }
     
     if ($archive_page && !empty($archive_page->post_content)):
+        // Generate TOC for archive page content
+        $archive_content = apply_filters('the_content', $archive_page->post_content);
+        $archive_content_with_toc = youtubestore_generate_toc($archive_content, $archive_page->ID);
         ?>
         <section class="archive-content-section">
             <div class="tour-subtitle-wrapper wrapper-content">
-                <?php echo apply_filters('the_content', $archive_page->post_content); ?>
+                <?php echo $archive_content_with_toc; ?>
             </div>
         </section>
         <?php

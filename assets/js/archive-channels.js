@@ -38,67 +38,153 @@
             }, 2000);
         });
         
-        // Filter function (client-side for instant feedback)
-        function applyFilters() {
-            var priceFrom = parseFloat($('input[name="price_from"]').val()) || 0;
-            var priceTo = parseFloat($('input[name="price_to"]').val()) || Infinity;
-            var subscribersFrom = parseFloat($('input[name="subscribers_from"]').val()) || 0;
-            var subscribersTo = parseFloat($('input[name="subscribers_to"]').val()) || Infinity;
-            var searchTerm = $('#channel-search').val().toLowerCase();
+        // Range Slider Functionality
+        function updateRangeTrack(type) {
+            var fromSlider = $('#' + type + '-slider-from');
+            var toSlider = $('#' + type + '-slider-to');
+            var fromValue = parseInt(fromSlider.val());
+            var toValue = parseInt(toSlider.val());
+            var min = parseInt(fromSlider.attr('min'));
+            var max = parseInt(fromSlider.attr('max'));
             
-            var visibleCount = 0;
+            // Ensure from doesn't exceed to
+            if (fromValue > toValue) {
+                fromValue = toValue;
+                fromSlider.val(fromValue);
+            }
             
-            $('.channels-table tbody tr').each(function() {
-                var $row = $(this);
-                if ($row.find('.no-results').length > 0) {
-                    return; // Skip no-results row
-                }
-                
-                var price = parseFloat($row.data('price')) || 0;
-                var subscribers = parseFloat($row.data('subscribers')) || 0;
-                var category = $row.data('category').toLowerCase();
-                var status = $row.data('status').toLowerCase();
-                var rowText = $row.text().toLowerCase();
-                
-                var priceMatch = (price >= priceFrom && price <= priceTo);
-                var subscribersMatch = (subscribers >= subscribersFrom && subscribers <= subscribersTo);
-                var searchMatch = (searchTerm === '' || rowText.indexOf(searchTerm) !== -1 || category.indexOf(searchTerm) !== -1);
-                
-                if (priceMatch && subscribersMatch && searchMatch) {
-                    $row.show();
-                    visibleCount++;
-                } else {
-                    $row.hide();
-                }
+            // Ensure to doesn't go below from
+            if (toValue < fromValue) {
+                toValue = fromValue;
+                toSlider.val(toValue);
+            }
+            
+            // Update input fields
+            $('#' + type + '-input-from').val(fromValue);
+            $('#' + type + '-input-to').val(toValue);
+            
+            // Update track color
+            var $wrapper = fromSlider.closest('.range-slider-wrapper');
+            var $track = $wrapper.find('.range-track');
+            var fromPercent = ((fromValue - min) / (max - min)) * 100;
+            var toPercent = ((toValue - min) / (max - min)) * 100;
+            
+            $track.css({
+                'background': 'linear-gradient(to right, #ddd ' + fromPercent + '%, #dc3545 ' + fromPercent + '%, #dc3545 ' + toPercent + '%, #ddd ' + toPercent + '%)'
             });
             
-            // Show message if no results
-            if (visibleCount === 0) {
-                if ($('.channels-table tbody .no-results').length === 0) {
-                    $('.channels-table tbody').append('<tr><td colspan="5" class="no-results"><h3>Không tìm thấy kênh nào phù hợp với bộ lọc</h3><p>Vui lòng thử lại với điều kiện khác</p></td></tr>');
-                }
-            } else {
-                $('.channels-table tbody .no-results').closest('tr').remove();
-            }
+            // Update value display
+            var fromFormatted = fromValue.toLocaleString('vi-VN');
+            var toFormatted = toValue.toLocaleString('vi-VN');
+            $('#' + type + '-value').text(fromFormatted + ' - ' + toFormatted);
         }
         
-        // Top filter form
-        $('#top-filter-form').on('submit', function(e) {
-            e.preventDefault();
+        // Initialize range tracks
+        updateRangeTrack('price');
+        updateRangeTrack('subscribers');
+        
+        // Debounce function
+        function debounce(func, wait) {
+            var timeout;
+            return function() {
+                var context = this, args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(function() {
+                    func.apply(context, args);
+                }, wait);
+            };
+        }
+        
+        // Handle slider changes - update track in real-time, apply filter on change end
+        $('.range-slider').on('input', function() {
+            var type = $(this).data('type');
+            updateRangeTrack(type);
+        });
+        
+        $('.range-slider').on('change', function() {
             applyFilters();
         });
+        
+        // Handle input field changes with debounce
+        var debouncedApplyFilters = debounce(applyFilters, 500);
+        
+        $('.range-input').on('input', function() {
+            var type = $(this).data('type');
+            var side = $(this).data('side');
+            var value = parseInt($(this).val()) || 0;
+            var min = parseInt($(this).attr('min')) || 0;
+            var max = parseInt($(this).attr('max')) || 1000000;
+            
+            // Clamp value
+            value = Math.max(min, Math.min(max, value));
+            $(this).val(value);
+            
+            // Update corresponding slider
+            $('#' + type + '-slider-' + side).val(value);
+            updateRangeTrack(type);
+        });
+        
+        $('.range-input').on('change', function() {
+            applyFilters();
+        });
+        
+        // Filter function - Update URL like sort
+        function applyFilters() {
+            var priceFrom = parseInt($('#price-input-from').val()) || 0;
+            var priceTo = parseInt($('#price-input-to').val()) || 0;
+            var subscribersFrom = parseInt($('#subscribers-input-from').val()) || 0;
+            var subscribersTo = parseInt($('#subscribers-input-to').val()) || 0;
+            var searchTerm = $('#channel-search').val();
+            
+            // Get min/max values
+            var priceMin = parseInt($('#price-slider-from').attr('min')) || 0;
+            var priceMax = parseInt($('#price-slider-from').attr('max')) || 1000000;
+            var subscribersMin = parseInt($('#subscribers-slider-from').attr('min')) || 0;
+            var subscribersMax = parseInt($('#subscribers-slider-from').attr('max')) || 1000000;
+            
+            // Build URL with filter parameters
+            var url = new URL(window.location.href);
+            
+            // Only add filter params if they're different from min/max
+            if (priceFrom > priceMin || priceTo < priceMax) {
+                url.searchParams.set('price_from', priceFrom);
+                url.searchParams.set('price_to', priceTo);
+            } else {
+                url.searchParams.delete('price_from');
+                url.searchParams.delete('price_to');
+            }
+            
+            if (subscribersFrom > subscribersMin || subscribersTo < subscribersMax) {
+                url.searchParams.set('subscribers_from', subscribersFrom);
+                url.searchParams.set('subscribers_to', subscribersTo);
+            } else {
+                url.searchParams.delete('subscribers_from');
+                url.searchParams.delete('subscribers_to');
+            }
+            
+            if (searchTerm) {
+                url.searchParams.set('search', searchTerm);
+            } else {
+                url.searchParams.delete('search');
+            }
+            
+            // Reset to page 1 when filtering
+            url.searchParams.set('paged', 1);
+            
+            // Redirect to new URL (server-side filtering)
+            window.location.href = url.toString();
+        }
         
         // Reset filter
         $('#reset-filter').on('click', function() {
-            $('#top-filter-form')[0].reset();
-            $('#channel-search').val('');
-            $('.channels-table tbody tr').show();
-            $('.channels-table tbody .no-results').closest('tr').remove();
-        });
-        
-        // Filter on input change
-        $('#top-filter-form input').on('input', function() {
-            applyFilters();
+            var url = new URL(window.location.href);
+            url.searchParams.delete('price_from');
+            url.searchParams.delete('price_to');
+            url.searchParams.delete('subscribers_from');
+            url.searchParams.delete('subscribers_to');
+            url.searchParams.delete('search');
+            url.searchParams.set('paged', 1);
+            window.location.href = url.toString();
         });
         
         // Per page change
@@ -110,9 +196,10 @@
             window.location.href = url.toString();
         });
         
-        // Search functionality
+        // Search functionality with debounce
+        var debouncedSearch = debounce(applyFilters, 800);
         $('#channel-search').on('keyup', function() {
-            applyFilters();
+            debouncedSearch();
         });
         
         // Sort functionality - Server-side via URL

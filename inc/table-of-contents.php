@@ -226,7 +226,8 @@ add_action('save_post', 'youtubestore_save_toc_meta_box');
  */
 function youtubestore_toc_scripts()
 {
-    if (!is_singular('post')) {
+    // Load TOC scripts on single posts and archive pages that might have TOC
+    if (!is_singular('post') && !is_post_type_archive('youtube_channel')) {
         return;
     }
     ?>

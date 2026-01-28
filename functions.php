@@ -147,6 +147,80 @@ function youtubestore_modify_archive_query($query)
         $per_page = isset($_GET['posts_per_page']) ? intval($_GET['posts_per_page']) : 25;
         $query->set('posts_per_page', $per_page);
         
+        // Handle filtering
+        $meta_query = array('relation' => 'AND');
+        
+        // Price filter
+        if (isset($_GET['price_from']) || isset($_GET['price_to'])) {
+            $price_from = isset($_GET['price_from']) ? intval($_GET['price_from']) : null;
+            $price_to = isset($_GET['price_to']) ? intval($_GET['price_to']) : null;
+            
+            if ($price_from !== null || $price_to !== null) {
+                if ($price_from !== null && $price_to !== null) {
+                    $meta_query[] = array(
+                        'key' => 'price',
+                        'value' => array($price_from, $price_to),
+                        'type' => 'NUMERIC',
+                        'compare' => 'BETWEEN'
+                    );
+                } elseif ($price_from !== null) {
+                    $meta_query[] = array(
+                        'key' => 'price',
+                        'value' => $price_from,
+                        'type' => 'NUMERIC',
+                        'compare' => '>='
+                    );
+                } elseif ($price_to !== null) {
+                    $meta_query[] = array(
+                        'key' => 'price',
+                        'value' => $price_to,
+                        'type' => 'NUMERIC',
+                        'compare' => '<='
+                    );
+                }
+            }
+        }
+        
+        // Subscribers filter
+        if (isset($_GET['subscribers_from']) || isset($_GET['subscribers_to'])) {
+            $subscribers_from = isset($_GET['subscribers_from']) ? intval($_GET['subscribers_from']) : null;
+            $subscribers_to = isset($_GET['subscribers_to']) ? intval($_GET['subscribers_to']) : null;
+            
+            if ($subscribers_from !== null || $subscribers_to !== null) {
+                if ($subscribers_from !== null && $subscribers_to !== null) {
+                    $meta_query[] = array(
+                        'key' => 'subscribers',
+                        'value' => array($subscribers_from, $subscribers_to),
+                        'type' => 'NUMERIC',
+                        'compare' => 'BETWEEN'
+                    );
+                } elseif ($subscribers_from !== null) {
+                    $meta_query[] = array(
+                        'key' => 'subscribers',
+                        'value' => $subscribers_from,
+                        'type' => 'NUMERIC',
+                        'compare' => '>='
+                    );
+                } elseif ($subscribers_to !== null) {
+                    $meta_query[] = array(
+                        'key' => 'subscribers',
+                        'value' => $subscribers_to,
+                        'type' => 'NUMERIC',
+                        'compare' => '<='
+                    );
+                }
+            }
+        }
+        
+        // Search filter
+        if (!empty($_GET['search'])) {
+            $query->set('s', sanitize_text_field($_GET['search']));
+        }
+        
+        if (count($meta_query) > 1) {
+            $query->set('meta_query', $meta_query);
+        }
+        
         // Handle sorting
         $orderby = isset($_GET['orderby']) ? sanitize_text_field($_GET['orderby']) : 'subscribers';
         $order = isset($_GET['order']) ? strtoupper(sanitize_text_field($_GET['order'])) : 'DESC';
