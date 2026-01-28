@@ -860,10 +860,7 @@ get_header();
                             </td>
                             
                             <td class="channel-link-value">
-                                <div class="channel-actions">
-                                    <a href="<?php echo esc_url($video_url); ?>" target="_blank" class="btn-channel btn-view">Xem kênh</a>
-                                    <button type="button" class="btn-channel btn-copy btn-copy-url" data-url="<?php echo esc_attr($video_url); ?>">Sao chép</button>
-                                </div>
+                                <a href="<?php echo esc_url($video_url); ?>" target="_blank" class="btn-channel btn-view">Xem kênh</a>
                             </td>
                             
                             <td class="category-value">

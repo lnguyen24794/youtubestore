@@ -16,13 +16,13 @@ get_header();
 </div>
 
 <div class="grid-hero" id="grid-hero">
-    <div id="grid-hero-banner" style="background-image: url('<?php echo YOUTUBESTORE_URI; ?>/inc/import/1912x800-5.jpg'); background-size: cover; background-position: center; min-height: 500px;">
+    <div id="grid-hero-banner" style="background-image: url('<?php echo YOUTUBESTORE_URI; ?>/assets/images/1912x800-5.jpg'); background-size: cover; background-position: center; min-height: 500px;">
     </div>
 </div>
 
 <style>
     #grid-hero-banner {
-        background-image: url('<?php echo YOUTUBESTORE_URI; ?>/inc/import/1912x800-5.jpg');
+        background-image: url('<?php echo YOUTUBESTORE_URI; ?>/assets/images/1912x800-2.jpg');
         background-size: cover;
         background-position: center;
         min-height: 500px;
@@ -31,7 +31,7 @@ get_header();
     
     @media (max-width: 768px) {
         #grid-hero-banner {
-            background-image: url('<?php echo YOUTUBESTORE_URI; ?>/inc/import/714x500-2.jpg');
+            background-image: url('<?php echo YOUTUBESTORE_URI; ?>/assets/images/714x500-2.jpg');
             min-height: 400px;
         }
     }

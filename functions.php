@@ -223,7 +223,7 @@ function youtubestore_modify_archive_query($query)
         
         // Handle sorting
         $orderby = isset($_GET['orderby']) ? sanitize_text_field($_GET['orderby']) : 'subscribers';
-        $order = isset($_GET['order']) ? strtoupper(sanitize_text_field($_GET['order'])) : 'DESC';
+        $order = isset($_GET['order']) ? strtoupper(sanitize_text_field($_GET['order'])) : 'ASC';
         
         // Store orderby in query for use in posts_clauses filter
         $query->set('youtubestore_orderby', $orderby);
