@@ -270,7 +270,7 @@ get_header();
     cursor: pointer;
     user-select: none;
     position: relative;
-    vertical-align: top;
+    vertical-align: middle;
     color: white;
     text-align: center;
 }
@@ -506,11 +506,93 @@ get_header();
     
     .filter-row {
         grid-template-columns: 1fr;
-        gap: 25px;
+        gap: 12px;
+        margin-bottom: 12px;
     }
     
     .top-filter-section {
-        padding: 20px;
+        padding: 10px 12px;
+        margin: 15px 0;
+        overflow: hidden;
+    }
+    
+    .filter-container {
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .filter-item {
+        gap: 6px;
+        min-width: 0;
+        max-width: 100%;
+    }
+    
+    .filter-label {
+        font-size: 12px;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    .filter-value {
+        font-size: 11px;
+        word-break: break-all;
+    }
+    
+    .range-slider-wrapper {
+        height: 36px;
+        margin: 4px 0;
+        min-width: 0;
+    }
+    
+    .range-slider {
+        min-width: 0;
+    }
+    
+    .range-slider::-webkit-slider-thumb {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .range-slider::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .range-inputs {
+        gap: 6px;
+        min-width: 0;
+    }
+    
+    .range-input {
+        padding: 6px 6px;
+        font-size: 11px;
+        min-width: 0;
+        flex: 1 1 auto;
+        box-sizing: border-box;
+        max-width: 100%;
+    }
+    
+    .range-inputs span {
+        font-size: 12px;
+        flex-shrink: 0;
+    }
+    
+    .filter-actions {
+        margin-top: 8px;
+        padding-top: 8px;
+    }
+    
+    .btn-filter {
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+
+    .btn-channel {
+        padding: 3px 4px !important;
+        font-size: 9px !important;
+        white-space: nowrap;
+        min-width: auto;
     }
 }
 </style>
@@ -896,10 +978,12 @@ get_header();
     </div>
 
     <!-- Pagination -->
-    <div class="pagination-wrapper">
-        <?php
+    <?php
         global $wp_query;
         if ($wp_query->max_num_pages > 1) {
+    ?>
+    <div class="pagination-wrapper">
+       <?php
             $big = 999999999;
             $pagination = paginate_links(array(
                 'base' => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
@@ -916,9 +1000,11 @@ get_header();
             if ($pagination) {
                 echo '<ul class="pagination">' . $pagination . '</ul>';
             }
-        }
-        ?>
+    ?>
     </div>
+    <?php
+        }
+    ?>
 
     <!-- Content Section from Page Editor -->
     <?php
