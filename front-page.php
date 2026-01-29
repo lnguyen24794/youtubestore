@@ -31,7 +31,7 @@ get_header();
     
     @media (max-width: 768px) {
         #grid-hero-banner {
-            background-image: url('<?php echo YOUTUBESTORE_URI; ?>/assets/images/714x500-2.jpg');
+            background-image: url('<?php echo YOUTUBESTORE_URI; ?>/assets/images/714x500-2.jpg') !important;
             min-height: 400px;
         }
     }
