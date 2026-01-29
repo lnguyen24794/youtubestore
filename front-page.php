@@ -21,18 +21,14 @@ get_header();
 </div>
 
 <style>
-    #grid-hero-banner {
-        background-image: url('<?php echo YOUTUBESTORE_URI; ?>/assets/images/1912x800-2.jpg');
-        background-size: cover;
-        background-position: center;
-        min-height: 500px;
-        width: 100%;
-    }
     
     @media (max-width: 768px) {
         #grid-hero-banner {
-            background-image: url('<?php echo YOUTUBESTORE_URI; ?>/assets/images/714x500-2.jpg') !important;
-            min-height: 400px;
+            min-height: unset !important;
+            height: auto !important;
+            width: 100%;
+            background: var(--bg-hero) no-repeat;
+            background-size: 100%;
         }
     }
 </style>
