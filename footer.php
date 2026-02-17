@@ -33,7 +33,7 @@
                             <li>
                                 <a href="http://online.gov.vn/Home/WebDetails/89727?AspxAutoDetectCookieSupport=1"
                                     target="_blank" title="Đăng ký doanh nghiệp">
-                                    <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/certificate.png"
+                                    <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/logoSaleNoti.png"
                                         alt="Đăng ký doanh nghiệp" style="max-width: 150px;">
                                 </a>
                             </li>
