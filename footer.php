@@ -11,10 +11,12 @@
                             <li>
                                 <span>CÔNG TY CỔ PHẦN CÔNG NGHỆ TRUYỀN THÔNG MK MEDIA</span><br>
                                 <span>MST: 0109379379. Ngày cấp: 25/02/2020. Nơi cấp: Sở KH&ĐT Tp. Hà Nội</span><br>
-                                <span>Trụ sở: Số nhà 101, ngõ 64, đường Kim Giang, phường Kim Giang, quận Thanh Xuân, Hà Nội</span>
+                                <span>Trụ sở: Số nhà 101, ngõ 64, đường Kim Giang, phường Kim Giang, quận Thanh Xuân, Hà
+                                    Nội</span>
                             </li>
                             <li>
-                                <span>Số tài khoản công ty: 19035699899886 Ngân hàng Techcombank chi nhánh Hà Nội.</span><br>
+                                <span>Số tài khoản công ty: 19035699899886 Ngân hàng Techcombank chi nhánh Hà
+                                    Nội.</span><br>
                                 <span>Chủ tài khoản: Công ty cổ phần công nghệ truyền thông MK Media</span>
                             </li>
                         </ul>
@@ -29,8 +31,10 @@
                                     title="Email">mrkiengmcc@gmail.com</a></li>
                             <li><span>Zalo:</span> <a href="https://zalo.me/0899707888" title="Zalo">0899707888</a></li>
                             <li>
-                                <a href="http://online.gov.vn/Home/WebDetails/89727" target="_blank" title="Đăng ký doanh nghiệp">
-                                    <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/certificate.png" alt="Đăng ký doanh nghiệp" style="max-width: 150px;">
+                                <a href="http://online.gov.vn/Home/WebDetails/89727?AspxAutoDetectCookieSupport=1"
+                                    target="_blank" title="Đăng ký doanh nghiệp">
+                                    <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/certificate.png"
+                                        alt="Đăng ký doanh nghiệp" style="max-width: 150px;">
                                 </a>
                             </li>
                         </ul>
@@ -40,14 +44,20 @@
                     <div class="footer-content">
                         <h3 class="title">Dịch vụ</h3>
                         <ul class="footer-list">
-                            <li><a href="<?php echo home_url('/mua-kenh-youtube'); ?>" title="Danh Sách Kênh">Danh Sách Kênh</a></li>
+                            <li><a href="<?php echo home_url('/mua-kenh-youtube'); ?>" title="Danh Sách Kênh">Danh Sách
+                                    Kênh</a></li>
                             <li><a href="<?php echo home_url('/chuyen-nhuong-kenh-youtube'); ?>"
                                     title="Chuyển nhượng kênh Youtube">Chuyển nhượng kênh Youtube</a></li>
-                            <li><a href="<?php echo home_url('/chinh-sach-bao-mat'); ?>" title="Chính sách bảo mật">Chính sách bảo mật</a></li>
-                            <li><a href="<?php echo home_url('/chinh-sach-giao-nhan-cai-dat'); ?>" title="Chính sách giao nhận & cài đặt">Chính sách giao nhận & cài đặt</a></li>
-                            <li><a href="<?php echo home_url('/chinh-sach-hoan-tien'); ?>" title="Chính sách hoàn tiền">Chính sách hoàn tiền</a></li>
-                            <li><a href="<?php echo home_url('/chinh-sach-thanh-toan'); ?>" title="Chính sách thanh toán">Chính sách thanh toán</a></li>
-                            <li><a href="<?php echo home_url('/thong-tin-cong-ty'); ?>" title="Thông tin công ty">Thông tin công ty</a></li>
+                            <li><a href="<?php echo home_url('/chinh-sach-bao-mat'); ?>"
+                                    title="Chính sách bảo mật">Chính sách bảo mật</a></li>
+                            <li><a href="<?php echo home_url('/chinh-sach-giao-nhan-cai-dat'); ?>"
+                                    title="Chính sách giao nhận & cài đặt">Chính sách giao nhận & cài đặt</a></li>
+                            <li><a href="<?php echo home_url('/chinh-sach-hoan-tien'); ?>"
+                                    title="Chính sách hoàn tiền">Chính sách hoàn tiền</a></li>
+                            <li><a href="<?php echo home_url('/chinh-sach-thanh-toan'); ?>"
+                                    title="Chính sách thanh toán">Chính sách thanh toán</a></li>
+                            <li><a href="<?php echo home_url('/thong-tin-cong-ty'); ?>" title="Thông tin công ty">Thông
+                                    tin công ty</a></li>
                         </ul>
                     </div>
                 </div>
