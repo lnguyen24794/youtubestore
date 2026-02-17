@@ -14,6 +14,7 @@ class YoutubeStore_CSV_Import
 
     public function __construct()
     {
+        echo "DEBUG: Loaded class from: " . __FILE__ . "\n";
         if (!defined('YOUTUBESTORE_DIR')) {
             define('YOUTUBESTORE_DIR', get_template_directory());
         }
@@ -23,47 +24,78 @@ class YoutubeStore_CSV_Import
     /**
      * Parse CSV file
      */
-    private function parse_csv_file($file_path)
+    private function parse_csv_file($file_path, $override_headers = null)
     {
+        echo "DEBUG: Checking file: $file_path\n";
         if (!file_exists($file_path)) {
-            return array();
+            echo "DEBUG: File not found: $file_path\n";
+            return false;
         }
+
+        // Create a temp file with normalized line endings
+        $content = file_get_contents($file_path);
+        echo "DEBUG: Parsing " . basename($file_path) . " (Length: " . strlen($content) . ")\n";
+        $content = str_replace("\r\n", "\n", $content);
+        $content = str_replace("\r", "\n", $content);
+
+        $temp_file = tempnam(sys_get_temp_dir(), 'csv_import_');
+        file_put_contents($temp_file, $content);
+
+        echo "DEBUG: Temp file created: $temp_file (Length: " . filesize($temp_file) . ")\n";
 
         $rows = array();
-        $handle = fopen($file_path, 'r');
-        
-        if ($handle === false) {
-            return array();
-        }
+        $headers = array();
 
-        // Read header row
-        $headers = fgetcsv($handle);
-        if ($headers === false) {
-            fclose($handle);
-            return array();
-        }
-
-        // Clean headers (remove quotes and spaces)
-        $headers = array_map(function($h) {
-            return trim($h, '"\' ');
-        }, $headers);
-
-        // Read data rows
-        while (($data = fgetcsv($handle)) !== false) {
-            if (count($data) === count($headers)) {
-                $row = array_combine($headers, $data);
-                // Clean values
-                foreach ($row as $key => $value) {
-                    $row[$key] = trim($value, '"\' ');
-                    if ($value === 'NULL' || $value === 'null' || $value === '') {
-                        $row[$key] = null;
-                    }
-                }
-                $rows[] = $row;
+        if (($handle = fopen($temp_file, "r")) !== FALSE) {
+            // Read header row (always read to skip it)
+            $file_headers = fgetcsv($handle);
+            if ($file_headers === false) {
+                echo "DEBUG: Failed to read headers from $temp_file\n";
+                fclose($handle);
+                unlink($temp_file);
+                return array();
             }
+            echo "DEBUG: Read headers: " . count($file_headers) . " columns\n";
+
+            // Clean headers (remove quotes and spaces)
+            if ($override_headers) {
+                $headers = $override_headers;
+            } else {
+                // Clean headers (remove quotes and spaces)
+                $headers = array_map(function ($h) {
+                    return trim($h, '"\' ');
+                }, $file_headers);
+            }
+
+            // Read data rows
+            $first = true;
+            while (($data = fgetcsv($handle)) !== false) {
+                if ($first) {
+                    echo "DEBUG: Headers count: " . count($headers) . ", Data count: " . count($data) . "\n";
+                    $first = false;
+                }
+
+                if (count($data) === count($headers)) {
+                    $row = array_combine($headers, $data);
+                    // Clean values
+                    foreach ($row as $key => $value) {
+                        $row[$key] = trim($value, '"\' ');
+                        if ($value === 'NULL' || $value === 'null' || $value === '') {
+                            $row[$key] = null;
+                        }
+                    }
+                    $rows[] = $row;
+                } else {
+                    echo "DEBUG: Header mismatch! Expected " . count($headers) . ", Got " . count($data) . "\n";
+                    echo "DEBUG: Headers: " . implode(',', $headers) . "\n";
+                    echo "DEBUG: Data: " . implode(',', $data) . "\n";
+                }
+            }
+
+            fclose($handle);
+            unlink($temp_file);
         }
 
-        fclose($handle);
         return array('headers' => $headers, 'rows' => $rows);
     }
 
@@ -88,17 +120,17 @@ class YoutubeStore_CSV_Import
             // CSV may have: "App\Models\Page" (single backslash) or "App\\Models\\Page" (double backslash)
             $seo_type = isset($data['seoable_type']) ? $data['seoable_type'] : '';
             $seoable_id = isset($data['seoable_id']) ? $data['seoable_id'] : '';
-            
+
             // Normalize the type - remove quotes and handle backslashes
             $seo_type = trim($seo_type, '"\' ');
-            
+
             $is_page = (
-                $seo_type === 'App\\Models\\Page' || 
+                $seo_type === 'App\\Models\\Page' ||
                 $seo_type === 'App\Models\Page' ||
                 $seo_type === 'App\\\\Models\\\\Page' ||
                 (strpos($seo_type, 'Page') !== false && strpos($seo_type, 'App') !== false)
             );
-            
+
             if ($is_page && !empty($seoable_id)) {
                 $page_ids[] = strval(trim($seoable_id, '"\' ')); // Convert to string for consistent comparison
             }
@@ -152,7 +184,7 @@ class YoutubeStore_CSV_Import
             // Check if page already exists
             $existing = get_page_by_path($data['slug'], OBJECT, 'page');
             $data_id_str = strval($data['id']);
-            
+
             if ($existing) {
                 $pages_map[$data_id_str] = $existing->ID;
                 continue;
@@ -160,7 +192,7 @@ class YoutubeStore_CSV_Import
 
             // Create WordPress page
             $content = $data['content'] ?? '';
-            
+
             $post_arr = array(
                 'post_title' => $data['name'],
                 'post_content' => $content,
@@ -173,11 +205,22 @@ class YoutubeStore_CSV_Import
             $post_id = wp_insert_post($post_arr);
 
             if (!is_wp_error($post_id)) {
+                // Process content for images
+                $processed_content = $this->import_content_images($post_id, $content);
+                if ($processed_content !== $content) {
+                    wp_update_post(array(
+                        'ID' => $post_id,
+                        'post_content' => $processed_content
+                    ));
+                }
+
                 $pages_map[$data_id_str] = $post_id;
                 $imported_pages++;
 
-                // Import featured image if exists
+                // Import featured image
+                echo "DEBUG: Image data for existing post: " . var_export($data['image'], true) . "\n";
                 if (!empty($data['image'])) {
+                    echo "DEBUG: Calling import_featured_image for existing post " . $post_id . "\n";
                     $this->import_featured_image($post_id, $data['image']);
                 }
             }
@@ -197,12 +240,28 @@ class YoutubeStore_CSV_Import
      */
     public function import_posts_from_csv()
     {
+        echo "DEBUG: Starting import_posts_from_csv\n";
         $csv_file = $this->csv_dir . '/posts.csv';
         if (!file_exists($csv_file)) {
             return new WP_Error('file_not_found', 'posts.csv not found');
         }
 
-        $parsed = $this->parse_csv_file($csv_file);
+        // Define correct headers based on data structure (9 columns in posts.csv)
+        // CSV Headers: "id","language","name","image","slug","content","status","created_at","updated_at"
+        // We map 'name' to 'title' for internal consistency
+        $headers = [
+            'id',
+            'language',
+            'name',
+            'image',
+            'slug',
+            'content',
+            'status',
+            'created_at',
+            'updated_at'
+        ];
+
+        $parsed = $this->parse_csv_file($csv_file, $headers);
         if (empty($parsed['rows'])) {
             return array('success' => false, 'message' => 'No data found in posts.csv');
         }
@@ -219,6 +278,7 @@ class YoutubeStore_CSV_Import
         $total_rows = count($parsed['rows']);
 
         foreach ($parsed['rows'] as $data) {
+            echo "DEBUG: Processing row ID: " . $data['id'] . "\n";
             if (empty($data['name']) || empty($data['slug'])) {
                 continue;
             }
@@ -251,8 +311,25 @@ class YoutubeStore_CSV_Import
             // Check if post/page already exists
             $existing = get_page_by_path($data['slug'], OBJECT, $post_type);
             $data_id_str = strval($data['id']);
-            
+
             if ($existing) {
+                // Update existing post
+                $post_id = $existing->ID;
+
+                // Process content for images
+                $processed_content = $this->import_content_images($post_id, $content);
+                if ($processed_content !== $content) {
+                    wp_update_post(array(
+                        'ID' => $post_id,
+                        'post_content' => $processed_content
+                    ));
+                }
+
+                // Import featured image
+                if (!empty($data['image'])) {
+                    $this->import_featured_image($post_id, $data['image']);
+                }
+
                 if ($post_type === 'page') {
                     $pages_map[$data_id_str] = $existing->ID;
                 } else {
@@ -263,7 +340,7 @@ class YoutubeStore_CSV_Import
 
             // Prepare content
             $content = $data['content'] ?? '';
-            
+
             // Create WordPress post/page
             $post_arr = array(
                 'post_title' => $data['name'],
@@ -277,6 +354,15 @@ class YoutubeStore_CSV_Import
             $post_id = wp_insert_post($post_arr);
 
             if (!is_wp_error($post_id)) {
+                // Process content for images
+                $processed_content = $this->import_content_images($post_id, $content);
+                if ($processed_content !== $content) {
+                    wp_update_post(array(
+                        'ID' => $post_id,
+                        'post_content' => $processed_content
+                    ));
+                }
+
                 $data_id_str = strval($data['id']);
                 if ($post_type === 'page') {
                     $pages_map[$data_id_str] = $post_id;
@@ -286,7 +372,7 @@ class YoutubeStore_CSV_Import
                     $imported_posts++;
                 }
 
-                // Import featured image if exists
+                // Import featured image
                 if (!empty($data['image'])) {
                     $this->import_featured_image($post_id, $data['image']);
                 }
@@ -327,7 +413,7 @@ class YoutubeStore_CSV_Import
             $seo_type = $data['seoable_type'];
             $is_post = ($seo_type === 'App\\Models\\Post' || $seo_type === 'App\Models\Post');
             $is_page = ($seo_type === 'App\\Models\\Page' || $seo_type === 'App\Models\Page');
-            
+
             if (!$is_post && !$is_page) {
                 continue;
             }
@@ -335,7 +421,7 @@ class YoutubeStore_CSV_Import
             // Find WordPress post/page ID
             $wp_id = null;
             $seoable_id_str = strval($data['seoable_id']);
-            
+
             if ($is_post && isset($posts_map[$seoable_id_str])) {
                 $wp_id = $posts_map[$seoable_id_str];
             } elseif ($is_page && isset($pages_map[$seoable_id_str])) {
@@ -406,37 +492,62 @@ class YoutubeStore_CSV_Import
     }
 
     /**
-     * Import featured image from URL
+     * Import featured image from URL or local path
      */
-    private function import_featured_image($post_id, $image_url)
+    private function import_featured_image($post_id, $image_path)
     {
-        if (empty($image_url)) {
+        if (empty($image_path)) {
             return false;
         }
 
+        // Clean up path
+        $image_path_clean = $image_path;
+        if (strpos($image_path, '/images/') === 0) {
+            $image_path_clean = str_replace('/images/', '', $image_path);
+        } else {
+            // Remove leading slash if present
+            $image_path_clean = ltrim($image_path, '/');
+        }
+
+        // Check if it's a local file relative to assets/images/
+        // We assume /images/ in CSV maps to assets/images/ in theme
+        // If CSV path is /images/upload/post/..., we want assets/images/upload/post/...
+        $local_path = get_template_directory() . '/assets/images/' . $image_path_clean;
+
+        echo "Import Debug: Checking local path: " . $local_path . "\n";
+
+        // Also check if the path already includes the directory
+        if (!file_exists($local_path) && file_exists(get_template_directory() . '/' . $image_path)) {
+            $local_path = get_template_directory() . '/' . $image_path;
+            echo "Import Debug: Found at alternate path: " . $local_path . "\n";
+        }
+
+        if (file_exists($local_path)) {
+            echo "Import Debug: Local file exists. Attempting upload.\n";
+            return $this->handle_local_image_upload($post_id, $local_path);
+        } else {
+            echo "Import Debug: Local file NOT found: " . $local_path . "\n";
+        }
+
+        // Fallback to URL import if not found locally
         // Handle relative URLs
-        if (strpos($image_url, 'http') !== 0) {
-            // If it's a relative path, you might need to prepend the base URL
-            // For now, skip relative URLs that don't start with /
-            if (strpos($image_url, '/') !== 0) {
-                return false;
-            }
-            // You can add base URL here if needed
-            // $image_url = 'https://youtubestore.vn' . $image_url;
+        if (strpos($image_path, 'http') !== 0) {
+            // If it's a relative path and not found locally, we can't do much unless we have a base URL
+            return false;
         }
 
         require_once(ABSPATH . 'wp-admin/includes/image.php');
         require_once(ABSPATH . 'wp-admin/includes/file.php');
         require_once(ABSPATH . 'wp-admin/includes/media.php');
 
-        $tmp = download_url($image_url);
-        
+        $tmp = download_url($image_path);
+
         if (is_wp_error($tmp)) {
             return false;
         }
 
         $file_array = array(
-            'name' => basename($image_url),
+            'name' => basename($image_path),
             'tmp_name' => $tmp
         );
 
@@ -449,6 +560,118 @@ class YoutubeStore_CSV_Import
 
         set_post_thumbnail($post_id, $id);
         return true;
+    }
+
+    /**
+     * Handle local image upload
+     */
+    private function handle_local_image_upload($post_id, $file_path)
+    {
+        require_once(ABSPATH . 'wp-admin/includes/image.php');
+        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once(ABSPATH . 'wp-admin/includes/media.php');
+
+        $filename = basename($file_path);
+        $upload_file = wp_upload_bits($filename, null, file_get_contents($file_path));
+
+        if (!$upload_file['error']) {
+            echo "Import Debug: Upload successful: " . $upload_file['file'] . "\n";
+            $wp_filetype = wp_check_filetype($filename, null);
+            $attachment = array(
+                'post_mime_type' => $wp_filetype['type'],
+                'post_parent' => $post_id,
+                'post_title' => preg_replace('/\.[^.]+$/', '', $filename),
+                'post_content' => '',
+                'post_status' => 'inherit'
+            );
+            $attachment_id = wp_insert_attachment($attachment, $upload_file['file'], $post_id);
+            if (!is_wp_error($attachment_id)) {
+                echo "Import Debug: Attachment created ID: " . $attachment_id . "\n";
+                require_once(ABSPATH . 'wp-admin/includes/image.php');
+                $attach_data = wp_generate_attachment_metadata($attachment_id, $upload_file['file']);
+                wp_update_attachment_metadata($attachment_id, $attach_data);
+
+                set_post_thumbnail($post_id, $attachment_id);
+                return $attachment_id;
+            } else {
+                echo "Import Debug: Attachment creation failed: " . $attachment_id->get_error_message() . "\n";
+            }
+        } else {
+            echo "Import Debug: Upload failed: " . $upload_file['error'] . "\n";
+        }
+        return false;
+    }
+
+
+
+    /**
+     * Parse content and import images
+     */
+    private function import_content_images($post_id, $content)
+    {
+        if (empty($content)) {
+            return $content;
+        }
+
+        // Find all images in content
+        // Matches <img src="..."> tags
+        if (preg_match_all('/<img[^>]+src="([^">]+)"/i', $content, $matches)) {
+            $image_urls = $matches[1];
+
+            foreach ($image_urls as $image_url) {
+                // Check if it's a local file we can import
+                // Assuming path structure in content matches what we have in assets
+                // Example in content: /storage/upload/post/123/image.jpg
+                // We map this to: assets/images/upload/post/123/image.jpg
+
+                $local_relative_path = $image_url;
+
+                // Clean up path
+                $local_relative_path = str_replace('/storage/', '', $local_relative_path);
+                $local_relative_path = str_replace('/images/', '', $local_relative_path);
+                $local_relative_path = ltrim($local_relative_path, '/');
+
+                $local_full_path = get_template_directory() . '/assets/images/' . $local_relative_path;
+
+                if (!file_exists($local_full_path)) {
+                    // Try alternative path structure
+                    // Maybe just filename?
+                    continue;
+                }
+
+                // Upload image to WordPress
+                require_once(ABSPATH . 'wp-admin/includes/image.php');
+                require_once(ABSPATH . 'wp-admin/includes/file.php');
+                require_once(ABSPATH . 'wp-admin/includes/media.php');
+
+                $filename = basename($local_full_path);
+                $upload_file = wp_upload_bits($filename, null, file_get_contents($local_full_path));
+
+                if (!$upload_file['error']) {
+                    $wp_filetype = wp_check_filetype($filename, null);
+                    $attachment = array(
+                        'post_mime_type' => $wp_filetype['type'],
+                        'post_parent' => $post_id,
+                        'post_title' => preg_replace('/\.[^.]+$/', '', $filename),
+                        'post_content' => '',
+                        'post_status' => 'inherit'
+                    );
+                    $attachment_id = wp_insert_attachment($attachment, $upload_file['file'], $post_id);
+
+                    if (!is_wp_error($attachment_id)) {
+                        require_once(ABSPATH . 'wp-admin/includes/image.php');
+                        $attach_data = wp_generate_attachment_metadata($attachment_id, $upload_file['file']);
+                        wp_update_attachment_metadata($attachment_id, $attach_data);
+
+                        // Replace URL in content with new WordPress URL
+                        $new_image_url = wp_get_attachment_url($attachment_id);
+                        $content = str_replace($image_url, $new_image_url, $content);
+                    }
+                }
+            }
+        }
+
+        return $content;
     }
 
     /**
@@ -490,7 +713,7 @@ class YoutubeStore_CSV_Import
         foreach ($menu_pages as $page_data) {
             // Check if page already exists
             $existing = get_page_by_path($page_data['slug'], OBJECT, 'page');
-            
+
             if ($existing) {
                 $pages_map[$page_data['slug']] = $existing->ID;
                 continue;
@@ -512,7 +735,7 @@ class YoutubeStore_CSV_Import
                 if (!empty($page_data['template'])) {
                     update_post_meta($page_id, '_wp_page_template', $page_data['template']);
                 }
-                
+
                 $pages_map[$page_data['slug']] = $page_id;
                 $imported++;
             }
@@ -601,6 +824,7 @@ class YoutubeStore_CSV_Import
         $pages_map_from_file = isset($pages_result['pages_map']) ? $pages_result['pages_map'] : array();
 
         // Import posts and pages from posts.csv
+        echo "DEBUG: About to call import_posts_from_csv\n";
         $posts_result = $this->import_posts_from_csv();
         if (is_wp_error($posts_result)) {
             $results['posts'] = array('success' => false, 'message' => $posts_result->get_error_message());
