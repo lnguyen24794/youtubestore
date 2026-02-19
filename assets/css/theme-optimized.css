@@ -670,3 +670,12 @@ ul {
 .wrapper-content ul li {
     white-space: unset !important;
 }
+
+.wrapper-content table.table-bordered {
+    border: 1px solid #dee2e6;
+}
+
+.wrapper-content table.table-bordered th,
+.wrapper-content table.table-bordered td {
+    border: 1px solid #dee2e6;
+}
