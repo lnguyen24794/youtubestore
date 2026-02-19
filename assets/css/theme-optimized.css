@@ -68,6 +68,7 @@
     0% {
         background-position: 200% 0;
     }
+
     100% {
         background-position: -200% 0;
     }
@@ -216,17 +217,17 @@
     font-weight: 600;
 }
 
-.filter-group > div {
+.filter-group>div {
     display: flex;
     gap: 10px;
 }
 
-.filter-group > div > div {
+.filter-group>div>div {
     display: flex;
     flex-direction: column;
 }
 
-.filter-group > div > div > label {
+.filter-group>div>div>label {
     display: block;
     font-size: 0.9em;
     margin-bottom: 3px;
@@ -477,7 +478,7 @@
         align-items: stretch;
     }
 
-    .filter-group > div {
+    .filter-group>div {
         flex-direction: column;
     }
 
@@ -625,37 +626,47 @@
     }
 }
 
-.wrapper-content h1{
+.wrapper-content h1 {
     margin-bottom: 25px;
 }
-.wrapper-content h2{
+
+.wrapper-content h2 {
     margin-bottom: 15px;
 }
-.wrapper-content h3, h4, h5, h6{
+
+.wrapper-content h3,
+h4,
+h5,
+h6 {
     margin-bottom: 10px;
 }
 
-.wrapper-content img{
+.wrapper-content img {
     margin-bottom: 10px;
 }
 
-.wrapper-content ol, ul {
+.wrapper-content ol,
+ul {
     margin-bottom: 20px;
     padding-left: 20px;
 }
 
-.wrapper-content li{
+.wrapper-content li {
     margin-bottom: 10px;
 }
 
-.wrapper-content p{
+.wrapper-content p {
     margin-bottom: 20px;
 }
 
-.wrapper-content blockquote{
+.wrapper-content blockquote {
     margin-bottom: 20px;
 }
 
-.wrapper-content table{
+.wrapper-content table {
     margin-bottom: 20px;
+}
+
+.wrapper-content ul li {
+    white-space: unset !important;
 }
