@@ -34,7 +34,6 @@ function youtubestore_generate_toc($content, $post_id = null)
     $toc_html = '<div class="youtubestore-toc-wrapper">';
     $toc_html .= '<div class="youtubestore-toc-header">';
     $toc_html .= '<h4 class="youtubestore-toc-title">';
-    $toc_html .= '<span class="youtubestore-toc-icon">📑</span> ';
     $toc_html .= '<span>Danh mục bài viết</span>';
     $toc_html .= '<span class="youtubestore-toc-toggle">▼</span>';
     $toc_html .= '</h4>';
@@ -47,10 +46,10 @@ function youtubestore_generate_toc($content, $post_id = null)
     $h3_counters = array(); // Track h3 counters per h2
 
     foreach ($matches as $index => $match) {
-        $level = (int)$match[1];
+        $level = (int) $match[1];
         $heading_text = strip_tags($match[2]);
         $heading_id = 'toc-' . $post_id . '-' . $index;
-        
+
         // Create anchor ID for heading
         $anchor = sanitize_title($heading_text);
         $heading_id = 'heading-' . $anchor;
@@ -89,7 +88,7 @@ function youtubestore_generate_toc($content, $post_id = null)
                 $h3_counters[$current_h2] = 0;
             }
             $h3_counters[$current_h2]++;
-            
+
             $toc_html .= '<li class="youtubestore-toc-item youtubestore-toc-h3">';
             $toc_html .= '<a href="#' . esc_attr($heading_id) . '" class="youtubestore-toc-link">';
             // Check if heading already has a number
@@ -176,7 +175,7 @@ add_action('add_meta_boxes', 'youtubestore_add_toc_meta_box');
 function youtubestore_toc_meta_box_callback($post)
 {
     wp_nonce_field('youtubestore_toc_meta_box', 'youtubestore_toc_meta_box_nonce');
-    
+
     $show_toc = get_post_meta($post->ID, '_show_toc', true);
     if ($show_toc === '') {
         $show_toc = 'yes'; // Default to yes
@@ -232,105 +231,116 @@ function youtubestore_toc_scripts()
     }
     ?>
     <style>
-    .youtubestore-toc-wrapper {
-        background: #fff;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        margin: 20px 0;
-        padding: 0;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .youtubestore-toc-header {
-        padding: 15px 20px;
-        border-bottom: 1px solid #e0e0e0;
-        cursor: pointer;
-        user-select: none;
-    }
-    .youtubestore-toc-title {
-        margin: 0;
-        font-size: 18px;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .youtubestore-toc-icon {
-        margin-right: 8px;
-        font-size: 20px;
-    }
-    .youtubestore-toc-toggle {
-        font-size: 12px;
-        transition: transform 0.3s;
-    }
-    .youtubestore-toc-wrapper.collapsed .youtubestore-toc-toggle {
-        transform: rotate(-90deg);
-    }
-    .youtubestore-toc-content {
-        padding: 15px 20px;
-        max-height: 600px;
-        overflow-y: auto;
-    }
-    .youtubestore-toc-wrapper.collapsed .youtubestore-toc-content {
-        display: none;
-    }
-    .youtubestore-toc-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-    .youtubestore-toc-item {
-        margin: 8px 0;
-        list-style: none !important;
-    }
-    .youtubestore-toc-item.youtubestore-toc-h2 {
-        font-weight: 600;
-    }
-    .youtubestore-toc-item.youtubestore-toc-h3 {
-        padding-left: 20px;
-        font-weight: 500;
-    }
-    .youtubestore-toc-item.youtubestore-toc-h4 {
-        padding-left: 40px;
-        font-weight: 400;
-        font-size: 0.9em;
-    }
-    .youtubestore-toc-link {
-        color: #333;
-        text-decoration: none;
-        display: block;
-        padding: 5px 0;
-        transition: color 0.2s;
-    }
-    .youtubestore-toc-link:hover {
-        color: #2271b1;
-    }
-    .youtubestore-toc-number {
-        margin-right: 5px;
-        font-weight: bold;
-    }
-    .youtubestore-toc-sublist {
-        list-style: none;
-        padding-left: 20px;
-        margin: 5px 0;
-    }
+        .youtubestore-toc-wrapper {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin: 20px 0;
+            padding: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .youtubestore-toc-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .youtubestore-toc-title {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .youtubestore-toc-toggle {
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+
+        .youtubestore-toc-wrapper.collapsed .youtubestore-toc-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .youtubestore-toc-content {
+            padding: 15px 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .youtubestore-toc-wrapper.collapsed .youtubestore-toc-content {
+            display: none;
+        }
+
+        .youtubestore-toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .youtubestore-toc-item {
+            margin: 8px 0;
+            list-style: none !important;
+        }
+
+        .youtubestore-toc-item.youtubestore-toc-h2 {
+            font-weight: 600;
+        }
+
+        .youtubestore-toc-item.youtubestore-toc-h3 {
+            padding-left: 20px;
+            font-weight: 500;
+        }
+
+        .youtubestore-toc-item.youtubestore-toc-h4 {
+            padding-left: 40px;
+            font-weight: 400;
+            font-size: 0.9em;
+        }
+
+        .youtubestore-toc-link {
+            color: #333;
+            text-decoration: none;
+            display: block;
+            padding: 5px 0;
+            transition: color 0.2s;
+        }
+
+        .youtubestore-toc-link:hover {
+            color: #2271b1;
+        }
+
+        .youtubestore-toc-number {
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        .youtubestore-toc-sublist {
+            list-style: none;
+            padding-left: 20px;
+            margin: 5px 0;
+        }
     </style>
     <script>
-    jQuery(document).ready(function($) {
-        $('.youtubestore-toc-header').on('click', function() {
-            $(this).closest('.youtubestore-toc-wrapper').toggleClass('collapsed');
+        jQuery(document).ready(function ($) {
+            $('.youtubestore-toc-header').on('click', function () {
+                $(this).closest('.youtubestore-toc-wrapper').toggleClass('collapsed');
+            });
+
+            // Smooth scroll to anchor
+            $('.youtubestore-toc-link').on('click', function (e) {
+                var target = $(this.getAttribute('href'));
+                if (target.length) {
+                    e.preventDefault();
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 100
+                    }, 500);
+                }
+            });
         });
-        
-        // Smooth scroll to anchor
-        $('.youtubestore-toc-link').on('click', function(e) {
-            var target = $(this.getAttribute('href'));
-            if (target.length) {
-                e.preventDefault();
-                $('html, body').animate({
-                    scrollTop: target.offset().top - 100
-                }, 500);
-            }
-        });
-    });
     </script>
     <?php
 }
