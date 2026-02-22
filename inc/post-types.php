@@ -40,31 +40,63 @@ function youtubestore_register_cpt()
     );
     $cpt_desc = __('YouTube Channels for sale', 'youtubestore');
 
-    $siteseo_options = get_option('siteseo_titles_option_name');
-    if (is_array($siteseo_options) && !empty($siteseo_options['titles_pt_archive_youtube_channel_desc'])) {
-        $cpt_desc = $siteseo_options['titles_pt_archive_youtube_channel_desc'];
-        if (function_exists('siteseo_parse_variables')) {
-            $cpt_desc = siteseo_parse_variables($cpt_desc);
-        } else {
-            $replacements = array(
-                '%%sitetitle%%' => get_bloginfo('name'),
-                '%%tagline%%' => get_bloginfo('description'),
-                '%%cpt_plural%%' => 'Danh sách Giới Thiệu Youtube',
-                '%%sep%%' => '-',
-            );
-            $cpt_desc = str_replace(array_keys($replacements), array_values($replacements), $cpt_desc);
+    $seo_page_id = 0;
+    $seo_pages = get_pages(array(
+        'meta_key' => '_wp_page_template',
+        'meta_value' => 'page-youtube-channels.php',
+        'number' => 1
+    ));
+    if (!empty($seo_pages)) {
+        $seo_page_id = $seo_pages[0]->ID;
+    }
+
+    if ($seo_page_id) {
+        $ss_page_desc = get_post_meta($seo_page_id, '_siteseo_titles_desc', true);
+        if (!empty($ss_page_desc)) {
+            $cpt_desc = function_exists('siteseo_parse_variables') ? siteseo_parse_variables($ss_page_desc, get_post($seo_page_id)) : $ss_page_desc;
+        } elseif (class_exists('WPSEO_Options')) {
+            $yoast_desc = get_post_meta($seo_page_id, '_yoast_wpseo_metadesc', true);
+            if (!empty($yoast_desc)) {
+                $cpt_desc = function_exists('wpseo_replace_vars') ? wpseo_replace_vars($yoast_desc, get_post($seo_page_id)) : $yoast_desc;
+            }
+        } elseif (class_exists('RankMath')) {
+            $rm_desc = get_post_meta($seo_page_id, 'rank_math_description', true);
+            if (!empty($rm_desc)) {
+                $cpt_desc = function_exists('rank_math_replace_variables') ? rank_math_replace_variables($rm_desc, get_post($seo_page_id)) : $rm_desc;
+            }
         }
-    } elseif (class_exists('WPSEO_Options')) {
-        $yoast_desc = WPSEO_Options::get('metadesc-ptarchive-youtube_channel', '');
-        if (!empty($yoast_desc)) {
-            $cpt_desc = function_exists('wpseo_replace_vars') ? wpseo_replace_vars($yoast_desc, null) : $yoast_desc;
-        }
-    } elseif (class_exists('RankMath')) {
-        $rm_options = get_option('rank-math-options-titles');
-        if (is_array($rm_options) && !empty($rm_options['pt_youtube_channel_archive_description'])) {
-            $cpt_desc = $rm_options['pt_youtube_channel_archive_description'];
-            if (function_exists('rank_math_replace_variables')) {
-                $cpt_desc = rank_math_replace_variables($cpt_desc);
+    }
+
+    // Fallbacks to Global Options if page meta is missing
+    if ($cpt_desc === __('YouTube Channels for sale', 'youtubestore')) {
+        $siteseo_options = get_option('siteseo_titles_option_name');
+        if (is_array($siteseo_options) && !empty($siteseo_options['titles_pt_archive_youtube_channel_desc'])) {
+            $cpt_desc = $siteseo_options['titles_pt_archive_youtube_channel_desc'];
+            if (function_exists('siteseo_parse_variables')) {
+                $cpt_desc = siteseo_parse_variables($cpt_desc);
+            } else {
+                // This block was originally inside the siteseo_options check, but now it's a fallback for when siteseo_parse_variables doesn't exist.
+                // It's better to keep it here as a general fallback for siteseo if the function is missing.
+                $replacements = array(
+                    '%%sitetitle%%' => get_bloginfo('name'),
+                    '%%tagline%%' => get_bloginfo('description'),
+                    '%%cpt_plural%%' => 'Danh sách Giới Thiệu Youtube',
+                    '%%sep%%' => '-',
+                );
+                $cpt_desc = str_replace(array_keys($replacements), array_values($replacements), $cpt_desc);
+            }
+        } elseif (class_exists('WPSEO_Options')) {
+            $yoast_desc = WPSEO_Options::get('metadesc-ptarchive-youtube_channel', '');
+            if (!empty($yoast_desc)) {
+                $cpt_desc = function_exists('wpseo_replace_vars') ? wpseo_replace_vars($yoast_desc, null) : $yoast_desc;
+            }
+        } elseif (class_exists('RankMath')) {
+            $rm_options = get_option('rank-math-options-titles');
+            if (is_array($rm_options) && !empty($rm_options['pt_youtube_channel_archive_description'])) {
+                $cpt_desc = $rm_options['pt_youtube_channel_archive_description'];
+                if (function_exists('rank_math_replace_variables')) {
+                    $cpt_desc = rank_math_replace_variables($cpt_desc);
+                }
             }
         }
     }
