@@ -599,12 +599,83 @@ get_header();
 
 <div class="container channel-archive-page">
     <!-- Page Title and Commitment Section -->
+    <?php
+    // Default values
+    $page_title = 'Mua bán kênh Youtube uy tín - Bảng giá & danh sách kênh Youtube';
+    $page_desc = "Bảo hành bảo mật kênh vĩnh viễn.\nCam kết 100% subscribe thật.\nLiên hệ Zalo: 0899.707,888 để gửi thêm các kênh khác";
+
+    // Get values from Yoast SEO
+    if ( class_exists( 'WPSEO_Options' ) ) {
+        $yoast_title = WPSEO_Options::get( 'title-ptarchive-youtube_channel', '' );
+        $yoast_desc  = WPSEO_Options::get( 'metadesc-ptarchive-youtube_channel', '' );
+        
+        if ( function_exists( 'wpseo_replace_vars' ) ) {
+            $yoast_title = wpseo_replace_vars( $yoast_title, null );
+            $yoast_desc  = wpseo_replace_vars( $yoast_desc, null );
+        }
+
+        if ( ! empty( $yoast_title ) ) {
+            $page_title = $yoast_title;
+        }
+        if ( ! empty( $yoast_desc ) ) {
+            $page_desc = $yoast_desc;
+        }
+    } 
+    // Get values from Rank Math
+    elseif ( class_exists( 'RankMath' ) ) {
+        $rm_options = get_option( 'rank-math-options-titles' );
+        if ( is_array( $rm_options ) ) {
+            $rm_title = isset( $rm_options['pt_youtube_channel_archive_title'] ) ? $rm_options['pt_youtube_channel_archive_title'] : '';
+            $rm_desc  = isset( $rm_options['pt_youtube_channel_archive_description'] ) ? $rm_options['pt_youtube_channel_archive_description'] : '';
+            
+            if ( function_exists( 'rank_math_replace_variables' ) ) {
+                $rm_title = rank_math_replace_variables( $rm_title );
+                $rm_desc  = rank_math_replace_variables( $rm_desc );
+            }
+
+            if ( ! empty( $rm_title ) ) {
+                $page_title = $rm_title;
+            }
+            if ( ! empty( $rm_desc ) ) {
+                $page_desc = $rm_desc;
+            }
+        }
+    }
+    // Get values from SiteSEO
+    else {
+        $siteseo_options = get_option( 'siteseo_titles_option_name' );
+        if ( is_array( $siteseo_options ) ) {
+            $ss_title = isset( $siteseo_options['titles_pt_archive_youtube_channel_title'] ) ? $siteseo_options['titles_pt_archive_youtube_channel_title'] : '';
+            $ss_desc  = isset( $siteseo_options['titles_pt_archive_youtube_channel_desc'] ) ? $siteseo_options['titles_pt_archive_youtube_channel_desc'] : '';
+            
+            if ( function_exists( 'siteseo_parse_variables' ) ) {
+                $ss_title = siteseo_parse_variables( $ss_title );
+                $ss_desc  = siteseo_parse_variables( $ss_desc );
+            } else {
+                // Basic fallback replacements if function not formally exposed early
+                $replacements = array(
+                    '%%sitetitle%%'   => get_bloginfo( 'name' ),
+                    '%%tagline%%'     => get_bloginfo( 'description' ),
+                    '%%cpt_plural%%'  => 'Danh sách Giới Thiệu Youtube', 
+                    '%%sep%%'         => '-',
+                );
+                $ss_title = str_replace( array_keys( $replacements ), array_values( $replacements ), $ss_title );
+                $ss_desc  = str_replace( array_keys( $replacements ), array_values( $replacements ), $ss_desc );
+            }
+
+            if ( ! empty( $ss_title ) ) {
+                $page_title = $ss_title;
+            }
+            if ( ! empty( $ss_desc ) ) {
+                $page_desc = $ss_desc;
+            }
+        }
+    }
+    ?>
     <div class="page-header-section">
-        <h1 class="page-title">Mua bán kênh Youtube uy tín - Bảng giá & danh sách kênh Youtube</h1>
+        <h1 class="page-title"><?php echo esc_html( $page_title ); ?></h1>
         <p class="page-commitment">
-            Bảo hành bảo mật kênh vĩnh viễn. 
-            Cam kết 100% subscribe thật. 
-            Liên hệ Zalo: 0899.707,888 để gửi thêm các kênh khác
+            <?php echo wp_kses_post( nl2br( $page_desc ) ); ?>
         </p>
     </div>
 
