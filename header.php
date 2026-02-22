@@ -17,7 +17,7 @@
                 max-height: 50vw !important;
             }
         }
-        
+
         /* Header Menu Styles */
         .header-menu {
             list-style: none;
@@ -27,11 +27,11 @@
             align-items: center;
             gap: 1.5rem;
         }
-        
+
         .header-menu li {
             margin: 0;
         }
-        
+
         .header-menu a {
             color: #fff;
             text-decoration: none;
@@ -41,11 +41,11 @@
             letter-spacing: 0.5px;
             transition: opacity 0.3s ease;
         }
-        
+
         .header-menu a:hover {
             opacity: 0.8;
         }
-        
+
         @media only screen and (max-width: 768px) {
             .header-menu {
                 display: none;
@@ -91,10 +91,12 @@
                                             class="navigation__link">Chuyển nhượng kênh Youtube</a>
                                     </li>
                                     <li class="navigation__item">
-                                        <a href="<?php echo home_url('/tin-tuc'); ?>" class="navigation__link">Tin Tức</a>
+                                        <a href="<?php echo home_url('/tin-tuc'); ?>" class="navigation__link">Tin
+                                            Tức</a>
                                     </li>
                                     <li class="navigation__item">
-                                        <a href="<?php echo home_url('/lien-he'); ?>" class="navigation__link">Liên Hệ</a>
+                                        <a href="<?php echo home_url('/lien-he'); ?>" class="navigation__link">Liên
+                                            Hệ</a>
                                     </li>
                                 </ul>
                             </div>
@@ -128,11 +130,14 @@
 
     <!-- Language Picker -->
     <div class="language-picker">
-        <button class="language-picker__button" onclick="document.getElementById('language-content').classList.toggle('show');" aria-expanded="false">
+        <button class="language-picker__button"
+            onclick="document.getElementById('language-content').classList.toggle('show');" aria-expanded="false"
+            aria-label="Select Language">
             <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/flag_vi.png" alt="Tiếng Việt">
             <em>Tiếng Việt</em>
             <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
             </svg>
         </button>
         <div id="language-content" class="dropdown-content">
@@ -154,14 +159,14 @@
                     <div class="header__logo-box d-flex align-items-center">
                         <a href="<?php echo home_url('/'); ?>" title="logo">
                             <img class="img-fluid"
-                                src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/logo-white.png"
-                                alt="<?php bloginfo('name'); ?>">
+                                src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/logo-white.webp"
+                                alt="<?php bloginfo('name'); ?>" width="160" height="160">
                         </a>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="header__nav">
-                      
+
                     </div>
                 </div>
             </div>

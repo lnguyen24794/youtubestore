@@ -87,6 +87,7 @@ function youtubestore_defer_scripts($tag, $handle, $src)
 {
     // Scripts to defer
     $defer_scripts = array(
+        'jquery',
         'youtubestore-sweetalert',
         'youtubestore-app',
         'youtubestore-main',

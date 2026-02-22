@@ -16,12 +16,12 @@ get_header();
 </div>
 
 <div class="grid-hero" id="grid-hero">
-    <div id="grid-hero-banner" style="background-image: url('<?php echo YOUTUBESTORE_URI; ?>/assets/images/1912x800-5.jpg'); background-size: cover; background-position: center; min-height: 500px;">
+    <div id="grid-hero-banner"
+        style="background-image: url('<?php echo YOUTUBESTORE_URI; ?>/assets/images/1912x800-5.webp'); background-size: cover; background-position: center; min-height: 500px;">
     </div>
 </div>
 
 <style>
-    
     @media (max-width: 768px) {
         #grid-hero-banner {
             min-height: unset !important;

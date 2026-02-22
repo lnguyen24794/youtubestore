@@ -33,8 +33,8 @@
                             <li>
                                 <a href="http://online.gov.vn/Home/WebDetails/89727?AspxAutoDetectCookieSupport=1"
                                     target="_blank" title="Đăng ký doanh nghiệp">
-                                    <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/logoSaleNoti.png"
-                                        alt="Đăng ký doanh nghiệp" style="max-width: 150px;">
+                                    <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/logoSaleNoti.webp"
+                                        alt="Đăng ký doanh nghiệp" style="max-width: 150px;" width="600" height="227">
                                 </a>
                             </li>
                         </ul>
@@ -80,14 +80,15 @@
         <p>Thiết kế bởi YoutubeStore</p>
     </div>
 </footer>
-<a id="scrolltop" class="scroll-top" onclick="document.documentElement.scrollIntoView({ behavior: 'smooth' });">
+<a id="scrolltop" class="scroll-top" onclick="document.documentElement.scrollIntoView({ behavior: 'smooth' });"
+    aria-label="Cuộn lên trên">
     <svg class="icon icon-chevron-up">
         <use xlink:href="#icon-chevron-up"></use>
     </svg>
 </a>
 <div class="overlay" id="modal-overlay"></div>
 <div class="modal" id="modal-form">
-    <button class="modal-close-btn" id="close-btn">
+    <button class="modal-close-btn" id="close-btn" aria-label="Đóng">
         <svg class="icon">
             <use xlink:href="#icon-close"></use>
         </svg>

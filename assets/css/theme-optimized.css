@@ -675,6 +675,15 @@ ul {
     border: 1px solid #dee2e6;
 }
 
+.wrapper-content table tr:nth-child(1) td {
+    font-weight: 600 !important;
+}
+
+.wrapper-content table th,
+td {
+    padding: 5px 10px;
+}
+
 .wrapper-content table.table-bordered th,
 .wrapper-content table.table-bordered td {
     border: 1px solid #dee2e6;
