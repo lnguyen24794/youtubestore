@@ -160,7 +160,7 @@
                         <a href="<?php echo home_url('/'); ?>" title="logo">
                             <img class="img-fluid"
                                 src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/logo-white.webp"
-                                alt="<?php bloginfo('name'); ?>" width="160" height="160">
+                                alt="<?php bloginfo('name'); ?>">
                         </a>
                     </div>
                 </div>
