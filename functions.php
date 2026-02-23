@@ -379,3 +379,106 @@ function youtubestore_schema()
     }
 }
 add_action('wp_head', 'youtubestore_schema');
+
+/**
+ * Override SEO Meta Title and Description for YouTube Channel Archive
+ */
+function youtubestore_override_archive_seo()
+{
+    if (!is_post_type_archive('youtube_channel')) {
+        return;
+    }
+
+    $seo_page_id = 0;
+    $seo_pages = get_pages(array(
+        'meta_key' => '_wp_page_template',
+        'meta_value' => 'page-youtube-channels.php',
+        'number' => 1
+    ));
+    if (!empty($seo_pages)) {
+        $seo_page_id = $seo_pages[0]->ID;
+    }
+
+    if (!$seo_page_id) {
+        return;
+    }
+
+    $meta_title = '';
+    $meta_desc = '';
+
+    // 1. SiteSEO
+    $ss_page_title = get_post_meta($seo_page_id, '_siteseo_titles_title', true);
+    $ss_page_desc = get_post_meta($seo_page_id, '_siteseo_titles_desc', true);
+
+    if (!empty($ss_page_title) || !empty($ss_page_desc)) {
+        if (function_exists('siteseo_parse_variables')) {
+            $meta_title = siteseo_parse_variables($ss_page_title, get_post($seo_page_id));
+            $meta_desc = siteseo_parse_variables($ss_page_desc, get_post($seo_page_id));
+        } else {
+            // SiteSEO fallback replacements if function not available
+            $replacements = array(
+                '%%sitetitle%%' => get_bloginfo('name'),
+                '%%tagline%%' => get_bloginfo('description'),
+                '%%title%%' => get_the_title($seo_page_id),
+                '%%sep%%' => '-',
+            );
+            $meta_title = str_replace(array_keys($replacements), array_values($replacements), $ss_page_title);
+            $meta_desc = str_replace(array_keys($replacements), array_values($replacements), $ss_page_desc);
+        }
+    }
+    // 2. Yoast SEO
+    elseif (class_exists('WPSEO_Options')) {
+        $meta_title = get_post_meta($seo_page_id, '_yoast_wpseo_title', true) ?: WPSEO_Options::get('title-ptarchive-youtube_channel', '');
+        $meta_desc = get_post_meta($seo_page_id, '_yoast_wpseo_metadesc', true) ?: WPSEO_Options::get('metadesc-ptarchive-youtube_channel', '');
+        if (function_exists('wpseo_replace_vars')) {
+            $meta_title = wpseo_replace_vars($meta_title, get_post($seo_page_id));
+            $meta_desc = wpseo_replace_vars($meta_desc, get_post($seo_page_id));
+        }
+    }
+    // 3. Rank Math
+    elseif (class_exists('RankMath')) {
+        $meta_title = get_post_meta($seo_page_id, 'rank_math_title', true);
+        $meta_desc = get_post_meta($seo_page_id, 'rank_math_description', true);
+        if (function_exists('rank_math_replace_variables')) {
+            $meta_title = rank_math_replace_variables($meta_title, get_post($seo_page_id));
+            $meta_desc = rank_math_replace_variables($meta_desc, get_post($seo_page_id));
+        }
+    }
+
+    // Apply Overrides
+    if (!empty($meta_title)) {
+        // Yoast
+        add_filter('wpseo_title', function ($title) use ($meta_title) {
+            return $meta_title; });
+        // RankMath
+        add_filter('rank_math/frontend/title', function ($title) use ($meta_title) {
+            return $meta_title; });
+        // SiteSEO / WordPress core
+        add_filter('pre_get_document_title', function ($title) use ($meta_title) {
+            return $meta_title; }, 99);
+        add_filter('document_title_parts', function ($parts) use ($meta_title) {
+            $parts['title'] = $meta_title;
+            return $parts;
+        }, 99);
+    }
+
+    if (!empty($meta_desc)) {
+        $meta_desc_clean = trim(wp_strip_all_tags($meta_desc));
+
+        // Yoast
+        add_filter('wpseo_metadesc', function ($desc) use ($meta_desc_clean) {
+            return $meta_desc_clean; });
+        // RankMath
+        add_filter('rank_math/frontend/description', function ($desc) use ($meta_desc_clean) {
+            return $meta_desc_clean; });
+
+        // SiteSEO - Remove their action, add our own
+        if (class_exists('\SiteSEO\TitlesMetas')) {
+            remove_action('wp_head', '\SiteSEO\TitlesMetas::add_meta_description', 1);
+        }
+        add_action('wp_head', function () use ($meta_desc_clean) {
+            echo '<meta name="description" content="' . esc_attr($meta_desc_clean) . '" />' . "\n";
+        }, 1);
+    }
+}
+add_action('wp', 'youtubestore_override_archive_seo');
