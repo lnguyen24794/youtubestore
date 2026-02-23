@@ -56,9 +56,6 @@
 
 <body <?php body_class(); ?> id="body-site">
     <?php wp_body_open(); ?>
-    <div id="fb-root"></div>
-    <script async defer crossorigin="anonymous"
-        src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v25.0&appId=2174410252844536"></script>
     <?php get_template_part('template-parts/svg-defs'); ?>
 
     <div class="navigation">

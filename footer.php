@@ -66,10 +66,11 @@
                     <div class="footer-content">
                         <h3 class="title">Theo dõi</h3>
                         <div class="fb-page" data-href="https://www.facebook.com/Youtubestore.vn" data-tabs="timeline"
-                            data-width="" data-height="" data-small-header="false" data-adapt-container-width="true"
-                            data-hide-cover="false" data-show-facepile="true">
+                            data-width="" data-height="200" data-small-header="true" data-adapt-container-width="true"
+                            data-hide-cover="true" data-show-facepile="true">
                             <blockquote cite="https://www.facebook.com/Youtubestore.vn" class="fb-xfbml-parse-ignore"><a
-                                    href="https://www.facebook.com/Youtubestore.vn">Youtubestore.vn</a></blockquote>
+                                    href="https://www.facebook.com/Youtubestore.vn">Youtubestore.vn</a>
+                            </blockquote>
                         </div>
                     </div>
                 </div>
