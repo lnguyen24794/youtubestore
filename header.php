@@ -3,8 +3,7 @@
 
 <head>
     <meta charset="<?php bloginfo('charset'); ?>">
-    <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <?php if (is_front_page()): ?>
         <link rel="preload" as="image" href="<?php echo YOUTUBESTORE_URI; ?>/assets/images/714x500-2.jpg"
@@ -178,5 +177,6 @@
                     </div>
                 </div>
             </div>
-        </div>
     </header>
+
+    <main id="main" class="site-main" role="main">
