@@ -88,7 +88,7 @@ get_header();
                 <div class="col-12 col-md-12 " style="text-align: center; padding-bottom:20px;">
                     <div class="youtube-facade" data-id="oITErRInqZM"
                         style="position: relative; padding-bottom: 56.25%; height: 0; background: #000; border-radius: 8px; overflow: hidden; cursor: pointer;">
-                        <img src="https://img.youtube.com/vi/oITErRInqZM/maxresdefault.jpg" alt="Video Youtubestore"
+                        <img src="https://img.youtube.com/vi/oITErRInqZM/hqdefault.jpg" alt="Video Youtubestore"
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;"
                             width="1280" height="720" loading="lazy">
                         <div class="play-button-overlay"
