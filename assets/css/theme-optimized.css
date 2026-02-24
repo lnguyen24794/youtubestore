@@ -643,6 +643,7 @@ h6 {
 
 .wrapper-content img {
     margin-bottom: 10px;
+    max-width: 100%;
 }
 
 .wrapper-content ol,

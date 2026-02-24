@@ -57,7 +57,11 @@ function youtubestore_generate_toc($content, $post_id = null)
         if ($level == 2) {
             // New main section
             if ($current_h2 !== null) {
-                $toc_html .= '</ul></li>';
+                if (isset($sub_items_started)) {
+                    $toc_html .= '</ul>';
+                    unset($sub_items_started);
+                }
+                $toc_html .= '</li>';
                 // Reset h3 counter for new h2
                 unset($h3_counters[$current_h2]);
             }

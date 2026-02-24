@@ -36,7 +36,7 @@ get_header();
     }
 
     .page-commitment {
-        color: #dc3545;
+        color: #b01b2e;
         font-weight: 600;
         font-size: 16px;
     }
@@ -77,7 +77,7 @@ get_header();
     }
 
     .filter-value {
-        color: #dc3545;
+        color: #b01b2e;
         font-weight: 700;
         font-size: 14px;
     }
@@ -103,9 +103,9 @@ get_header();
     .range-slider::-webkit-slider-thumb {
         -webkit-appearance: none;
         appearance: none;
-        width: 20px;
-        height: 20px;
-        background: #dc3545;
+        width: 24px;
+        height: 24px;
+        background: #b01b2e;
         border-radius: 50%;
         cursor: pointer;
         pointer-events: all;
@@ -119,9 +119,9 @@ get_header();
     }
 
     .range-slider::-moz-range-thumb {
-        width: 20px;
-        height: 20px;
-        background: #dc3545;
+        width: 24px;
+        height: 24px;
+        background: #b01b2e;
         border-radius: 50%;
         cursor: pointer;
         pointer-events: all;
@@ -154,7 +154,7 @@ get_header();
         left: 0;
         right: 0;
         height: 100%;
-        background: #dc3545;
+        background: #b01b2e;
         border-radius: 3px;
         z-index: 1;
     }
@@ -177,11 +177,11 @@ get_header();
 
     .range-input:focus {
         outline: none;
-        border-color: #dc3545;
+        border-color: #b01b2e;
     }
 
     .range-inputs span {
-        color: #666;
+        color: #555;
         font-weight: 600;
     }
 
@@ -195,13 +195,15 @@ get_header();
     }
 
     .btn-filter {
-        padding: 10px 24px;
+        padding: 12px 24px;
         border: none;
         border-radius: 6px;
         font-size: 14px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
+        min-height: 44px;
+        box-sizing: border-box;
     }
 
     .btn-reset {
@@ -258,7 +260,7 @@ get_header();
     }
 
     .channels-table thead {
-        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        background: linear-gradient(135deg, #b01b2e 0%, #8b1323 100%);
         color: #fff;
     }
 
@@ -321,7 +323,7 @@ get_header();
 
     .channels-table .price-value {
         font-weight: 700;
-        color: #dc3545;
+        color: #b01b2e;
         font-size: 16px;
         text-align: center;
     }
@@ -362,7 +364,7 @@ get_header();
     }
 
     .btn-channel {
-        padding: 8px 16px;
+        padding: 12px 16px;
         border: none;
         border-radius: 6px;
         font-size: 13px;
@@ -373,10 +375,12 @@ get_header();
         display: inline-block;
         white-space: nowrap;
         text-align: center;
+        min-height: 44px;
+        box-sizing: border-box;
     }
 
     .btn-view {
-        background: #dc3545;
+        background: #b01b2e;
         color: #fff;
     }
 
@@ -421,7 +425,7 @@ get_header();
     }
 
     .no-results p {
-        color: #999;
+        color: #555;
         font-size: 14px;
     }
 
@@ -451,8 +455,13 @@ get_header();
 
     .pagination a,
     .pagination span {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         padding: 10px 16px;
+        min-width: 44px;
+        min-height: 44px;
+        box-sizing: border-box;
         border: 1px solid #ddd;
         border-radius: 6px;
         color: #333;
@@ -462,15 +471,15 @@ get_header();
     }
 
     .pagination a:hover {
-        background: #dc3545;
+        background: #b01b2e;
         color: #fff;
-        border-color: #dc3545;
+        border-color: #b01b2e;
     }
 
     .pagination .current {
-        background: #dc3545;
+        background: #b01b2e;
         color: #fff;
-        border-color: #dc3545;
+        border-color: #b01b2e;
     }
 
     .pagination .prev,
@@ -593,10 +602,14 @@ get_header();
         }
 
         .btn-channel {
-            padding: 3px 4px !important;
-            font-size: 9px !important;
+            padding: 8px 10px !important;
+            font-size: 11px !important;
             white-space: nowrap;
-            min-width: auto;
+            min-width: 44px;
+            min-height: 44px !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     }
 </style>
@@ -796,20 +809,24 @@ get_header();
                     <div class="range-slider-wrapper">
                         <input type="range" id="price-slider-from" class="range-slider"
                             min="<?php echo esc_attr($price_min); ?>" max="<?php echo esc_attr($price_max); ?>"
-                            value="<?php echo esc_attr($current_price_from); ?>" data-type="price" data-side="from">
+                            value="<?php echo esc_attr($current_price_from); ?>" data-type="price" data-side="from"
+                            aria-label="Kéo chọn mức giá tối thiểu">
                         <input type="range" id="price-slider-to" class="range-slider"
                             min="<?php echo esc_attr($price_min); ?>" max="<?php echo esc_attr($price_max); ?>"
-                            value="<?php echo esc_attr($current_price_to); ?>" data-type="price" data-side="to">
+                            value="<?php echo esc_attr($current_price_to); ?>" data-type="price" data-side="to"
+                            aria-label="Kéo chọn mức giá tối đa">
                         <div class="range-track"></div>
                     </div>
                     <div class="range-inputs">
                         <input type="number" id="price-input-from" class="range-input"
                             min="<?php echo esc_attr($price_min); ?>" max="<?php echo esc_attr($price_max); ?>"
-                            value="<?php echo esc_attr($current_price_from); ?>" data-type="price" data-side="from">
+                            value="<?php echo esc_attr($current_price_from); ?>" data-type="price" data-side="from"
+                            aria-label="Nhập mức giá tối thiểu">
                         <span>-</span>
                         <input type="number" id="price-input-to" class="range-input"
                             min="<?php echo esc_attr($price_min); ?>" max="<?php echo esc_attr($price_max); ?>"
-                            value="<?php echo esc_attr($current_price_to); ?>" data-type="price" data-side="to">
+                            value="<?php echo esc_attr($current_price_to); ?>" data-type="price" data-side="to"
+                            aria-label="Nhập mức giá tối đa">
                     </div>
                 </div>
 
@@ -826,12 +843,12 @@ get_header();
                             min="<?php echo esc_attr($subscribers_min); ?>"
                             max="<?php echo esc_attr($subscribers_max); ?>"
                             value="<?php echo esc_attr($current_subscribers_from); ?>" data-type="subscribers"
-                            data-side="from">
+                            data-side="from" aria-label="Kéo chọn số người đăng ký tối thiểu">
                         <input type="range" id="subscribers-slider-to" class="range-slider"
                             min="<?php echo esc_attr($subscribers_min); ?>"
                             max="<?php echo esc_attr($subscribers_max); ?>"
                             value="<?php echo esc_attr($current_subscribers_to); ?>" data-type="subscribers"
-                            data-side="to">
+                            data-side="to" aria-label="Kéo chọn số người đăng ký tối đa">
                         <div class="range-track"></div>
                     </div>
                     <div class="range-inputs">
@@ -839,13 +856,13 @@ get_header();
                             min="<?php echo esc_attr($subscribers_min); ?>"
                             max="<?php echo esc_attr($subscribers_max); ?>"
                             value="<?php echo esc_attr($current_subscribers_from); ?>" data-type="subscribers"
-                            data-side="from">
+                            data-side="from" aria-label="Nhập số người đăng ký tối thiểu">
                         <span>-</span>
                         <input type="number" id="subscribers-input-to" class="range-input"
                             min="<?php echo esc_attr($subscribers_min); ?>"
                             max="<?php echo esc_attr($subscribers_max); ?>"
                             value="<?php echo esc_attr($current_subscribers_to); ?>" data-type="subscribers"
-                            data-side="to">
+                            data-side="to" aria-label="Nhập số người đăng ký tối đa">
                     </div>
                 </div>
             </div>
@@ -859,8 +876,8 @@ get_header();
     <!-- Display Options and Search -->
     <div class="filter-controls">
         <div class="display-options">
-            <span>Hiển thị</span>
-            <select id="per-page">
+            <label for="per-page">Hiển thị</label>
+            <select id="per-page" aria-label="Số kênh hiển thị trên mỗi trang">
                 <?php
                 $current_per_page = isset($_GET['posts_per_page']) ? intval($_GET['posts_per_page']) : 25;
                 ?>
@@ -872,8 +889,9 @@ get_header();
             <span>kênh</span>
         </div>
         <div class="search-controls">
-            <label>Tìm kiếm:</label>
-            <input type="search" id="channel-search" placeholder="Tìm kiếm kênh, chủ đề...">
+            <label for="channel-search">Tìm kiếm:</label>
+            <input type="search" id="channel-search" placeholder="Tìm kiếm kênh, chủ đề..."
+                aria-label="Nhập từ khóa tìm kiếm">
         </div>
     </div>
 
