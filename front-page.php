@@ -197,6 +197,27 @@ get_header();
 
     document.addEventListener("DOMContentLoaded", function () {
         var facades = document.querySelectorAll('.youtube-facade');
+
+        // Function to load the iframe
+        var loadYoutubeVideo = function (facade) {
+            var videoId = facade.getAttribute('data-id');
+            if (videoId && !facade.classList.contains('loaded')) {
+                var iframe = document.createElement('iframe');
+                // Added autoplay=1 and playsinline=1
+                iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0&playsinline=1&mute=1';
+                iframe.setAttribute('frameborder', '0');
+                // Force full size
+                iframe.setAttribute('style', 'position: absolute; top: 0; left: 0; width: 100%; height: 100%;');
+                iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+                iframe.setAttribute('allowfullscreen', 'true');
+
+                facade.innerHTML = '';
+                facade.appendChild(iframe);
+                facade.classList.add('loaded'); // Prevent multiple loads
+            }
+        };
+
+        // 1. Hover effects (fallback if auto-play fails or is slow)
         facades.forEach(function (facade) {
             facade.addEventListener('mouseenter', function () {
                 var overlay = facade.querySelector('.play-button-overlay');
@@ -213,21 +234,33 @@ get_header();
                 }
             });
 
+            // 2. Click to play (fallback)
             facade.addEventListener('click', function () {
-                var videoId = facade.getAttribute('data-id');
-                if (videoId) {
-                    var iframe = document.createElement('iframe');
-                    iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0';
-                    iframe.setAttribute('frameborder', '0');
-                    iframe.setAttribute('style', 'position: absolute; top: 0; left: 0; width: 100%; height: 100%;');
-                    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-                    iframe.setAttribute('allowfullscreen', 'true');
-
-                    facade.innerHTML = '';
-                    facade.appendChild(iframe);
-                }
+                loadYoutubeVideo(facade);
             });
         });
+
+        // 3. Auto-play on scroll using IntersectionObserver
+        if ('IntersectionObserver' in window) {
+            var observerOptions = {
+                root: null,
+                rootMargin: '50px', // Start loading slightly before it comes into view
+                threshold: 0.1 // Trigger when at least 10% is visible
+            };
+
+            var videoObserver = new IntersectionObserver(function (entries, observer) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        loadYoutubeVideo(entry.target);
+                        observer.unobserve(entry.target); // Stop observing once loaded
+                    }
+                });
+            }, observerOptions);
+
+            facades.forEach(function (facade) {
+                videoObserver.observe(facade);
+            });
+        }
     });
 </script>
 
