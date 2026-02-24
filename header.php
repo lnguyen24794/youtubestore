@@ -108,7 +108,7 @@
                                 <div class="navigation__image">
                                     <img id="menu-image" class="img-fluid"
                                         src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/menu-about.png"
-                                        alt="Images">
+                                        alt="Menu" width="200" height="150" loading="lazy">
                                 </div>
                                 <div class="navigation__info">
                                     <ul class="navigation-list">
@@ -133,7 +133,8 @@
         <button class="language-picker__button"
             onclick="document.getElementById('language-content').classList.toggle('show');" aria-expanded="false"
             aria-label="Select Language">
-            <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/flag_vi.png" alt="Tiếng Việt">
+            <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/flag_vi.png" alt="Tiếng Việt" width="24"
+                height="16">
             <em>Tiếng Việt</em>
             <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -144,7 +145,8 @@
             <ul class="language-picker__list">
                 <li>
                     <a href="<?php echo home_url('/'); ?>" class="active">
-                        <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/flag_vi.png" alt="Tiếng Việt">
+                        <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/flag_vi.png" alt="Tiếng Việt"
+                            width="24" height="16">
                         <span>Tiếng Việt</span>
                     </a>
                 </li>
@@ -160,7 +162,7 @@
                         <a href="<?php echo home_url('/'); ?>" title="logo">
                             <img class="img-fluid"
                                 src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/logo-white.webp"
-                                alt="<?php bloginfo('name'); ?>">
+                                alt="<?php bloginfo('name'); ?>" width="168" height="55" fetchpriority="high">
                         </a>
                     </div>
                 </div>

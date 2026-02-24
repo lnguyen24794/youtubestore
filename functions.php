@@ -87,7 +87,7 @@ function youtubestore_defer_scripts($tag, $handle, $src)
 {
     // Scripts to defer
     $defer_scripts = array(
-        'jquery',
+        'jquery-migrate',
         'youtubestore-sweetalert',
         'youtubestore-app',
         'youtubestore-main',
@@ -103,6 +103,26 @@ function youtubestore_defer_scripts($tag, $handle, $src)
 add_filter('script_loader_tag', 'youtubestore_defer_scripts', 10, 3);
 
 /**
+ * Async Load CSS
+ */
+function youtubestore_async_css($html, $handle, $href, $media)
+{
+    // Only optimize our specific stylesheets
+    $async_stylesheets = array(
+        'youtubestore-app',
+        'youtubestore-optimized'
+    );
+
+    if (in_array($handle, $async_stylesheets)) {
+        $html = str_replace("rel='stylesheet'", "rel='stylesheet' media='print' onload=\"this.media='all'\"", $html);
+        $html .= '<noscript><link rel="stylesheet" id="' . $handle . '-css" href="' . $href . '" type="text/css" media="' . $media . '" /></noscript>';
+    }
+
+    return $html;
+}
+add_filter('style_loader_tag', 'youtubestore_async_css', 10, 4);
+
+/**
  * Add resource hints for better performance
  */
 function youtubestore_resource_hints($urls, $relation_type)
@@ -110,6 +130,22 @@ function youtubestore_resource_hints($urls, $relation_type)
     if ('preconnect' === $relation_type) {
         $urls[] = array(
             'href' => 'https://fonts.googleapis.com',
+            'crossorigin',
+        );
+        $urls[] = array(
+            'href' => 'https://fonts.gstatic.com',
+            'crossorigin',
+        );
+        $urls[] = array(
+            'href' => 'https://www.youtube.com',
+            'crossorigin',
+        );
+        $urls[] = array(
+            'href' => 'https://connect.facebook.net',
+            'crossorigin',
+        );
+        $urls[] = array(
+            'href' => 'https://www.googletagmanager.com',
             'crossorigin',
         );
     }
@@ -449,13 +485,16 @@ function youtubestore_override_archive_seo()
     if (!empty($meta_title)) {
         // Yoast
         add_filter('wpseo_title', function ($title) use ($meta_title) {
-            return $meta_title; });
+            return $meta_title;
+        });
         // RankMath
         add_filter('rank_math/frontend/title', function ($title) use ($meta_title) {
-            return $meta_title; });
+            return $meta_title;
+        });
         // SiteSEO / WordPress core
         add_filter('pre_get_document_title', function ($title) use ($meta_title) {
-            return $meta_title; }, 99);
+            return $meta_title;
+        }, 99);
         add_filter('document_title_parts', function ($parts) use ($meta_title) {
             $parts['title'] = $meta_title;
             return $parts;
@@ -467,10 +506,12 @@ function youtubestore_override_archive_seo()
 
         // Yoast
         add_filter('wpseo_metadesc', function ($desc) use ($meta_desc_clean) {
-            return $meta_desc_clean; });
+            return $meta_desc_clean;
+        });
         // RankMath
         add_filter('rank_math/frontend/description', function ($desc) use ($meta_desc_clean) {
-            return $meta_desc_clean; });
+            return $meta_desc_clean;
+        });
 
         // SiteSEO - Remove their action, add our own
         if (class_exists('\SiteSEO\TitlesMetas')) {

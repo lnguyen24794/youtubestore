@@ -38,10 +38,17 @@ get_header();
         <div class="box-service-home branding">
             <div class="box-content row">
                 <div class="col-12 col-md-12 " style="text-align: center; padding-bottom:20px;">
-                    <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0;">
-                        <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" width="100%"
-                            src="https://www.youtube.com/embed/oITErRInqZM?autoplay=1&mute=0"
-                            title="YouTube video player" frameborder="0" allowfullscreen allow='autoplay'></iframe>
+                    <div class="youtube-facade" data-id="oITErRInqZM"
+                        style="position: relative; padding-bottom: 56.25%; height: 0; background: #000; border-radius: 8px; overflow: hidden; cursor: pointer;">
+                        <img src="https://img.youtube.com/vi/oITErRInqZM/maxresdefault.jpg" alt="Video Youtubestore"
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;"
+                            width="1280" height="720" loading="lazy">
+                        <div class="play-button-overlay"
+                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; background: rgba(220, 53, 69, 0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+                            <div
+                                style="width: 0; height: 0; border-left: 25px solid #fff; border-top: 15px solid transparent; border-bottom: 15px solid transparent; margin-left: 5px;">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -131,6 +138,8 @@ get_header();
     }
 </style>
 
+</script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         if (typeof swal !== 'undefined') {
@@ -158,6 +167,29 @@ get_header();
                     }
                 });
         }
+    });
+
+    jQuery(document).ready(function ($) {
+        // YouTube video facade hover effect
+        $('.youtube-facade').hover(
+            function () { $(this).find('.play-button-overlay').css('background', 'rgba(220, 53, 69, 1)').css('transform', 'translate(-50%, -50%) scale(1.1)'); },
+            function () { $(this).find('.play-button-overlay').css('background', 'rgba(220, 53, 69, 0.9)').css('transform', 'translate(-50%, -50%) scale(1)'); }
+        );
+
+        // YouTube video facade click handler
+        $('.youtube-facade').on('click', function () {
+            var videoId = $(this).data('id');
+            if (videoId) {
+                var iframe = $('<iframe>', {
+                    src: 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0',
+                    frameborder: '0',
+                    style: 'position: absolute; top: 0; left: 0; width: 100%; height: 100%;',
+                    allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+                    allowfullscreen: true
+                });
+                $(this).html(iframe);
+            }
+        });
     });
 </script>
 

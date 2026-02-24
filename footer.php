@@ -35,7 +35,7 @@
                                     target="_blank" title="Đăng ký doanh nghiệp">
                                     <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/logoSaleNoti.webp"
                                         alt="Đăng ký doanh nghiệp" style="max-width: 150px; max-height: 50px"
-                                        width="600" height="227">
+                                        width="150" height="57" loading="lazy">
                                 </a>
                             </li>
                         </ul>
@@ -72,7 +72,7 @@
                                 src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FYoutubestore.vn&tabs=&width=340&height=130&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
                                 width="340" height="130" style="border:none;overflow:hidden" scrolling="no"
                                 frameborder="0" allowfullscreen="true"
-                                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+                                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" loading="lazy"></iframe>
                         </div>
                     </div>
                 </div>
@@ -101,8 +101,8 @@
     <div class="messenger">
         <div class="ring">
             <div class="">
-                <a href="https://zalo.me/0899707888" class="btn-img" target="_blank">
-                    <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/communication.png" width="38">
+                <a href="https://zalo.me/0899707888" class="btn-img" target="_blank" aria-label="Zalo">
+                    <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/communication.png" width="38" height="38" alt="Zalo Icon" loading="lazy">
                 </a>
             </div>
         </div>
@@ -115,8 +115,8 @@
     <div class="zalo">
         <div class="ring">
             <div class="">
-                <a href="https://m.me/Youtubestore.vn" class="btn-img" target="_blank">
-                    <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/social-media.png" width="38">
+                <a href="https://m.me/Youtubestore.vn" class="btn-img" target="_blank" aria-label="Facebook Messenger">
+                    <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/social-media.png" width="38" height="38" alt="Messenger Icon" loading="lazy">
                 </a>
             </div>
         </div>
