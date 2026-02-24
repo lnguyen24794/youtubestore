@@ -114,6 +114,7 @@ function youtubestore_async_css($html, $handle, $href, $media)
 {
     // Only optimize our specific stylesheets
     $async_stylesheets = array(
+        'youtubestore-app',
         'youtubestore-optimized'
     );
 

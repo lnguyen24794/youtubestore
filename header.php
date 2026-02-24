@@ -6,6 +6,12 @@
     <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <?php if (is_front_page()): ?>
+        <link rel="preload" as="image" href="<?php echo YOUTUBESTORE_URI; ?>/assets/images/714x500-2.jpg"
+            media="(max-width: 768px)">
+        <link rel="preload" as="image" href="<?php echo YOUTUBESTORE_URI; ?>/assets/images/1912x800-5.webp"
+            media="(min-width: 769px)">
+    <?php endif; ?>
     <?php wp_head(); ?>
     <style>
         iframe {

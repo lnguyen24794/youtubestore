@@ -16,19 +16,67 @@ get_header();
 </div>
 
 <div class="grid-hero" id="grid-hero">
-    <div id="grid-hero-banner"
-        style="background-image: url('<?php echo YOUTUBESTORE_URI; ?>/assets/images/1912x800-5.webp'); background-size: cover; background-position: center; min-height: 500px;">
+    <div id="grid-hero-banner-container" style="width: 100%; position: relative; display: block;">
+        <picture>
+            <source media="(max-width: 768px)" srcset="<?php echo YOUTUBESTORE_URI; ?>/assets/images/714x500-2.jpg">
+            <img id="grid-hero-banner-img" src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/1912x800-5.webp"
+                alt="Youtube Store" fetchpriority="high" loading="eager" width="1912" height="800"
+                style="width: 100%; min-height: 500px; object-fit: cover; object-position: center; display: block;">
+        </picture>
     </div>
 </div>
 
 <style>
+    /* Critical CSS to prevent layout shift before app.min.css loads */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .grid-hero {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+    }
+
+    .container {
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
     @media (max-width: 768px) {
-        #grid-hero-banner {
+        #grid-hero-banner-img {
             min-height: unset !important;
             height: auto !important;
             width: 100%;
-            background: var(--bg-hero) no-repeat;
-            background-size: 100%;
+        }
+    }
+
+    @media (min-width: 576px) {
+        .container {
+            max-width: 540px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .container {
+            max-width: 720px;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .container {
+            max-width: 960px;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .container {
+            max-width: 1140px;
         }
     }
 </style>
@@ -150,14 +198,14 @@ get_header();
     document.addEventListener("DOMContentLoaded", function () {
         var facades = document.querySelectorAll('.youtube-facade');
         facades.forEach(function (facade) {
-            facade.addEventListener('mouseenter', function() {
+            facade.addEventListener('mouseenter', function () {
                 var overlay = facade.querySelector('.play-button-overlay');
                 if (overlay) {
                     overlay.style.background = 'rgba(220, 53, 69, 1)';
                     overlay.style.transform = 'translate(-50%, -50%) scale(1.1)';
                 }
             });
-            facade.addEventListener('mouseleave', function() {
+            facade.addEventListener('mouseleave', function () {
                 var overlay = facade.querySelector('.play-button-overlay');
                 if (overlay) {
                     overlay.style.background = 'rgba(220, 53, 69, 0.9)';
@@ -174,7 +222,7 @@ get_header();
                     iframe.setAttribute('style', 'position: absolute; top: 0; left: 0; width: 100%; height: 100%;');
                     iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
                     iframe.setAttribute('allowfullscreen', 'true');
-                    
+
                     facade.innerHTML = '';
                     facade.appendChild(iframe);
                 }
