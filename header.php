@@ -113,7 +113,8 @@
                                 <div class="navigation__image">
                                     <img id="menu-image" class="img-fluid"
                                         src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/menu-about.png"
-                                        alt="Menu" width="auto" height="80" loading="lazy">
+                                        alt="Menu" width="612" height="463" loading="lazy"
+                                        style="max-height: 80px; width: auto;">
                                 </div>
                                 <div class="navigation__info">
                                     <ul class="navigation-list">

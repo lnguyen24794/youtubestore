@@ -159,7 +159,7 @@ get_header();
 </div>
 
 <div id="custom-welcome-modal"
-    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 30, 30, 0.55); z-index: 10000; align-items: center; justify-content: center;">
+    style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 30, 30, 0.55); z-index: 10000; align-items: center; justify-content: center;">
     <div
         style="background: #fff; width: 90%; max-width: 500px; padding: 30px 20px; border-radius: 5px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
         <h3 style="font-size: 24px; color: rgba(0,0,0,0.65); margin-bottom: 25px; margin-top: 0; font-weight: 600;">Hãy
