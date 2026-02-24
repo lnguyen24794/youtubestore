@@ -199,18 +199,12 @@ get_header();
         var facades = document.querySelectorAll('.youtube-facade');
 
         // Function to load the iframe
-        var loadYoutubeVideo = function (facade, isAutoPlayParams) {
+        var loadYoutubeVideo = function (facade) {
             var videoId = facade.getAttribute('data-id');
             if (videoId && !facade.classList.contains('loaded')) {
                 var iframe = document.createElement('iframe');
-
-                // If triggered by scroll, we must mute it to allow autoplay in modern browsers.
-                // If triggered by click, we can play with sound immediately.
-                var params = isAutoPlayParams
-                    ? '?autoplay=1&rel=0&playsinline=1&mute=1'
-                    : '?autoplay=1&rel=0&playsinline=1';
-
-                iframe.src = 'https://www.youtube.com/embed/' + videoId + params;
+                // Removed mute=1 so it plays with sound
+                iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0&playsinline=1';
                 iframe.setAttribute('frameborder', '0');
                 // Force full size
                 iframe.setAttribute('style', 'position: absolute; top: 0; left: 0; width: 100%; height: 100%;');
@@ -240,13 +234,13 @@ get_header();
                 }
             });
 
-            // 2. Click to play (Play WITH sound)
+            // 2. Click to play (fallback)
             facade.addEventListener('click', function () {
-                loadYoutubeVideo(facade, false);
+                loadYoutubeVideo(facade);
             });
         });
 
-        // 3. Auto-play on scroll using IntersectionObserver (Play MUTED to bypass browser blocks)
+        // 3. Auto-play on scroll using IntersectionObserver
         if ('IntersectionObserver' in window) {
             var observerOptions = {
                 root: null,
@@ -257,7 +251,7 @@ get_header();
             var videoObserver = new IntersectionObserver(function (entries, observer) {
                 entries.forEach(function (entry) {
                     if (entry.isIntersecting) {
-                        loadYoutubeVideo(entry.target, true); // true = use autoPlay parameter (muted)
+                        loadYoutubeVideo(entry.target);
                         observer.unobserve(entry.target); // Stop observing once loaded
                     }
                 });
