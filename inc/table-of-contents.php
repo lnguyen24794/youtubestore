@@ -325,20 +325,36 @@ function youtubestore_toc_scripts()
         }
     </style>
     <script>
-        jQuery(document).ready(function ($) {
-            $('.youtubestore-toc-header').on('click', function () {
-                $(this).closest('.youtubestore-toc-wrapper').toggleClass('collapsed');
+        document.addEventListener("DOMContentLoaded", function () {
+            var headers = document.querySelectorAll('.youtubestore-toc-header');
+            headers.forEach(function (header) {
+                header.addEventListener('click', function () {
+                    var wrapper = this.closest('.youtubestore-toc-wrapper');
+                    if (wrapper) {
+                        wrapper.classList.toggle('collapsed');
+                    }
+                });
             });
 
             // Smooth scroll to anchor
-            $('.youtubestore-toc-link').on('click', function (e) {
-                var target = $(this.getAttribute('href'));
-                if (target.length) {
-                    e.preventDefault();
-                    $('html, body').animate({
-                        scrollTop: target.offset().top - 100
-                    }, 500);
-                }
+            var links = document.querySelectorAll('.youtubestore-toc-link');
+            links.forEach(function (link) {
+                link.addEventListener('click', function (e) {
+                    var targetId = this.getAttribute('href');
+                    if (targetId && targetId !== '#') {
+                        var target = null;
+                        try { target = document.querySelector(targetId); } catch (err) { }
+
+                        if (target) {
+                            e.preventDefault();
+                            var targetPosition = target.getBoundingClientRect().top + window.scrollY;
+                            window.scrollTo({
+                                top: targetPosition - 100,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
             });
         });
     </script>

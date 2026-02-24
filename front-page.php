@@ -110,85 +110,75 @@ get_header();
     </div>
 </div>
 
-<style>
-    .swal-overlay {
-        background-color: rgba(30, 30, 30, 0.55);
-    }
-
-    .swal-button {
-        padding: 7px 19px;
-        border-radius: 2px;
-        background-color: #CF4042;
-        font-size: 20px;
-        border: 1px solid #CF4042;
-        text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3);
-    }
-
-    .swal-modal {
-        min-width: 50% !important;
-        max-width: 100% !important;
-    }
-
-    .swal-footer {
-        text-align: center;
-    }
-
-    .swal-text {
-        font-size: 22px;
-    }
-</style>
-
-</script>
+<div id="custom-welcome-modal"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 30, 30, 0.55); z-index: 10000; align-items: center; justify-content: center;">
+    <div
+        style="background: #fff; width: 90%; max-width: 500px; padding: 30px 20px; border-radius: 5px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h3 style="font-size: 24px; color: rgba(0,0,0,0.65); margin-bottom: 25px; margin-top: 0; font-weight: 600;">Hãy
+            lựa chọn nhu cầu của bạn?</h3>
+        <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+            <button onclick="window.location.href='<?php echo home_url('/mua-kenh-youtube'); ?>'"
+                style="padding: 10px 20px; border-radius: 4px; background-color: #CF4042; color: #fff; font-size: 18px; border: none; cursor: pointer; text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3); font-weight: 600;">Tôi
+                muốn mua kênh</button>
+            <button onclick="window.location.href='<?php echo home_url('/chuyen-nhuong-kenh-youtube'); ?>'"
+                style="padding: 10px 20px; border-radius: 4px; background-color: #CF4042; color: #fff; font-size: 18px; border: none; cursor: pointer; text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3); font-weight: 600;">Tôi
+                muốn bán kênh</button>
+        </div>
+        <div style="margin-top: 25px;">
+            <button onclick="document.getElementById('custom-welcome-modal').style.display='none'"
+                style="background: none; border: none; color: #888; cursor: pointer; text-decoration: underline; font-size: 16px;">Đóng</button>
+        </div>
+    </div>
+</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        if (typeof swal !== 'undefined') {
-            swal("Hãy lựa chọn nhu cầu của bạn?", {
-                buttons: {
-                    catch: {
-                        text: "Tôi muốn mua kênh",
-                        value: "catch",
-                    },
-                    defeat: {
-                        text: "Tôi muốn bán kênh",
-                        value: "defeat",
-                    }
-                },
-            })
-                .then((value) => {
-                    switch (value) {
-                        case "defeat":
-                            window.location.href = "<?php echo home_url('/chuyen-nhuong-kenh-youtube'); ?>"
-                            break;
-
-                        case "catch":
-                            window.location.href = "<?php echo home_url('/mua-kenh-youtube'); ?>"
-                            break;
-                    }
-                });
+        // Show the custom modal
+        var modal = document.getElementById('custom-welcome-modal');
+        if (modal) {
+            modal.style.display = 'flex';
         }
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
     });
 
-    jQuery(document).ready(function ($) {
-        // YouTube video facade hover effect
-        $('.youtube-facade').hover(
-            function () { $(this).find('.play-button-overlay').css('background', 'rgba(220, 53, 69, 1)').css('transform', 'translate(-50%, -50%) scale(1.1)'); },
-            function () { $(this).find('.play-button-overlay').css('background', 'rgba(220, 53, 69, 0.9)').css('transform', 'translate(-50%, -50%) scale(1)'); }
-        );
+    document.addEventListener("DOMContentLoaded", function () {
+        var facades = document.querySelectorAll('.youtube-facade');
+        facades.forEach(function (facade) {
+            facade.addEventListener('mouseenter', function() {
+                var overlay = facade.querySelector('.play-button-overlay');
+                if (overlay) {
+                    overlay.style.background = 'rgba(220, 53, 69, 1)';
+                    overlay.style.transform = 'translate(-50%, -50%) scale(1.1)';
+                }
+            });
+            facade.addEventListener('mouseleave', function() {
+                var overlay = facade.querySelector('.play-button-overlay');
+                if (overlay) {
+                    overlay.style.background = 'rgba(220, 53, 69, 0.9)';
+                    overlay.style.transform = 'translate(-50%, -50%) scale(1)';
+                }
+            });
 
-        // YouTube video facade click handler
-        $('.youtube-facade').on('click', function () {
-            var videoId = $(this).data('id');
-            if (videoId) {
-                var iframe = $('<iframe>', {
-                    src: 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0',
-                    frameborder: '0',
-                    style: 'position: absolute; top: 0; left: 0; width: 100%; height: 100%;',
-                    allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
-                    allowfullscreen: true
-                });
-                $(this).html(iframe);
-            }
+            facade.addEventListener('click', function () {
+                var videoId = facade.getAttribute('data-id');
+                if (videoId) {
+                    var iframe = document.createElement('iframe');
+                    iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0';
+                    iframe.setAttribute('frameborder', '0');
+                    iframe.setAttribute('style', 'position: absolute; top: 0; left: 0; width: 100%; height: 100%;');
+                    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+                    iframe.setAttribute('allowfullscreen', 'true');
+                    
+                    facade.innerHTML = '';
+                    facade.appendChild(iframe);
+                }
+            });
         });
     });
 </script>

@@ -62,7 +62,6 @@ function youtubestore_scripts()
     // Use WP jQuery instead of bundled one to avoid redundancy, unless strict requirement.
     wp_enqueue_script('jquery');
 
-    wp_enqueue_script('youtubestore-sweetalert', YOUTUBESTORE_URI . '/assets/js/home/sweetalert.min.js', array(), YOUTUBESTORE_VERSION, true);
     wp_enqueue_script('youtubestore-app', YOUTUBESTORE_URI . '/assets/js/home/app.min.js', array('jquery'), YOUTUBESTORE_VERSION, true);
 
     // We can keep main.js for our custom Facade/Filter logic, or merge. 
@@ -85,10 +84,16 @@ add_action('wp_enqueue_scripts', 'youtubestore_scripts');
  */
 function youtubestore_defer_scripts($tag, $handle, $src)
 {
+    // Do not defer scripts in admin area
+    if (is_admin()) {
+        return $tag;
+    }
+
     // Scripts to defer
     $defer_scripts = array(
+        'jquery',
+        'jquery-core',
         'jquery-migrate',
-        'youtubestore-sweetalert',
         'youtubestore-app',
         'youtubestore-main',
         'youtubestore-archive-channels'

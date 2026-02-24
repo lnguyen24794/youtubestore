@@ -108,7 +108,7 @@
                                 <div class="navigation__image">
                                     <img id="menu-image" class="img-fluid"
                                         src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/menu-about.png"
-                                        alt="Menu" width="200" height="150" loading="lazy">
+                                        alt="Menu" width="auto" height="80" loading="lazy">
                                 </div>
                                 <div class="navigation__info">
                                     <ul class="navigation-list">
@@ -162,7 +162,7 @@
                         <a href="<?php echo home_url('/'); ?>" title="logo">
                             <img class="img-fluid"
                                 src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/logo-white.webp"
-                                alt="<?php bloginfo('name'); ?>" width="168" height="55" fetchpriority="high">
+                                alt="<?php bloginfo('name'); ?>" width="80" height="80" fetchpriority="high">
                         </a>
                     </div>
                 </div>
