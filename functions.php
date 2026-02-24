@@ -108,6 +108,18 @@ function youtubestore_defer_scripts($tag, $handle, $src)
 add_filter('script_loader_tag', 'youtubestore_defer_scripts', 10, 3);
 
 /**
+ * Remove Unnecessary Core CSS
+ */
+function youtubestore_remove_core_css()
+{
+    wp_dequeue_style('wp-block-library');
+    wp_dequeue_style('wp-block-library-theme');
+    wp_dequeue_style('wc-blocks-style');
+    wp_dequeue_style('classic-theme-styles');
+}
+add_action('wp_enqueue_scripts', 'youtubestore_remove_core_css', 100);
+
+/**
  * Async Load CSS
  */
 function youtubestore_async_css($html, $handle, $href, $media)
@@ -121,6 +133,11 @@ function youtubestore_async_css($html, $handle, $href, $media)
     if (in_array($handle, $async_stylesheets)) {
         $html = str_replace("rel='stylesheet'", "rel='stylesheet' media='print' onload=\"this.media='all'\"", $html);
         $html .= '<noscript><link rel="stylesheet" id="' . $handle . '-css" href="' . $href . '" type="text/css" media="' . $media . '" /></noscript>';
+    }
+
+    // Add display=swap to Google Fonts
+    if (strpos($href, 'fonts.googleapis.com') !== false && strpos($href, 'display=swap') === false) {
+        $html = str_replace('href="' . $href . '"', 'href="' . $href . '&display=swap"', $html);
     }
 
     return $html;
