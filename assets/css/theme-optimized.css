@@ -643,7 +643,13 @@ h6 {
 
 .wrapper-content img {
     margin-bottom: 10px;
-    max-width: 100%;
+    max-width: 100% !important;
+}
+
+@media screen and (max-width: 768px) {
+    .wrapper-content img {
+        width: 100% !important;
+    }
 }
 
 .wrapper-content ol,
