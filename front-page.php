@@ -240,28 +240,6 @@ get_header();
                 loadYoutubeVideo(facade);
             });
         });
-
-        // 3. Auto-play on scroll using IntersectionObserver
-        if ('IntersectionObserver' in window) {
-            var observerOptions = {
-                root: null,
-                rootMargin: '50px', // Start loading slightly before it comes into view
-                threshold: 0.1 // Trigger when at least 10% is visible
-            };
-
-            var videoObserver = new IntersectionObserver(function (entries, observer) {
-                entries.forEach(function (entry) {
-                    if (entry.isIntersecting) {
-                        loadYoutubeVideo(entry.target);
-                        observer.unobserve(entry.target); // Stop observing once loaded
-                    }
-                });
-            }, observerOptions);
-
-            facades.forEach(function (facade) {
-                videoObserver.observe(facade);
-            });
-        }
     });
 </script>
 

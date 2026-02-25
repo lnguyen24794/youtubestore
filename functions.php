@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define Constants
-define('YOUTUBESTORE_VERSION', '1.0.10');
+define('YOUTUBESTORE_VERSION', '1.1.0');
 define('YOUTUBESTORE_DIR', get_template_directory());
 define('YOUTUBESTORE_URI', get_template_directory_uri());
 
@@ -144,36 +144,7 @@ function youtubestore_async_css($html, $handle, $href, $media)
 }
 add_filter('style_loader_tag', 'youtubestore_async_css', 10, 4);
 
-/**
- * Add resource hints for better performance
- */
-function youtubestore_resource_hints($urls, $relation_type)
-{
-    if ('preconnect' === $relation_type) {
-        $urls[] = array(
-            'href' => 'https://fonts.googleapis.com',
-            'crossorigin',
-        );
-        $urls[] = array(
-            'href' => 'https://fonts.gstatic.com',
-            'crossorigin',
-        );
-        $urls[] = array(
-            'href' => 'https://www.youtube.com',
-            'crossorigin',
-        );
-        $urls[] = array(
-            'href' => 'https://connect.facebook.net',
-            'crossorigin',
-        );
-        $urls[] = array(
-            'href' => 'https://www.googletagmanager.com',
-            'crossorigin',
-        );
-    }
-    return $urls;
-}
-add_filter('wp_resource_hints', 'youtubestore_resource_hints', 10, 2);
+
 
 /**
  * Require Files
