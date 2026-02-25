@@ -79,30 +79,79 @@ get_header();
             max-width: 1140px;
         }
     }
+
+    /* Youtube section responsive styles */
+    .youtube-wrapper {
+        width: 100%;
+        margin: 0 auto;
+        padding-bottom: 20px;
+        margin-top: 30px;
+    }
+    
+    .youtube-facade {
+        position: relative; 
+        padding-bottom: 56.25%; 
+        height: 0; 
+        background: #000; 
+        overflow: hidden; 
+        cursor: pointer;
+    }
+    
+    .play-button-overlay {
+        position: absolute; 
+        top: 50%; 
+        left: 50%; 
+        transform: translate(-50%, -50%); 
+        width: 80px; 
+        height: 80px; 
+        background: rgba(220, 53, 69, 0.9); 
+        border-radius: 50%; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        transition: all 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+        .youtube-wrapper {
+            padding-left: 15px;
+            padding-right: 15px;
+            margin-top: 15px;
+        }
+        .youtube-facade {
+            border-radius: 8px;
+        }
+        .play-button-overlay {
+            width: 60px;
+            height: 60px;
+        }
+    }
+
+    @media (min-width: 769px) {
+        .youtube-wrapper {
+            padding-left: 0;
+            padding-right: 0;
+            max-width: 100%;
+        }
+        .youtube-facade {
+            border-radius: 0;
+        }
+    }
 </style>
 
 <div class="grid-call">
-    <div class="container">
-        <div class="box-service-home branding">
-            <div class="box-content row">
-                <div class="col-12 col-md-12 " style="text-align: center; padding-bottom:20px;">
-                    <div class="youtube-facade" data-id="oITErRInqZM"
-                        style="position: relative; padding-bottom: 56.25%; height: 0; background: #000; border-radius: 8px; overflow: hidden; cursor: pointer;">
-                        <img src="https://img.youtube.com/vi/oITErRInqZM/hqdefault.jpg" alt="Video Youtubestore"
-                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;"
-                            width="1280" height="720" loading="lazy">
-                        <div class="play-button-overlay"
-                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; background: rgba(220, 53, 69, 0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
-                            <div
-                                style="width: 0; height: 0; border-left: 25px solid #fff; border-top: 15px solid transparent; border-bottom: 15px solid transparent; margin-left: 5px;">
-                            </div>
-                        </div>
-                    </div>
+    <div class="youtube-wrapper">
+        <div class="youtube-facade" data-id="oITErRInqZM">
+            <img src="https://img.youtube.com/vi/oITErRInqZM/hqdefault.jpg" alt="Video Youtubestore"
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;"
+                width="1280" height="720" loading="lazy">
+            <div class="play-button-overlay">
+                <div
+                    style="width: 0; height: 0; border-left: 25px solid #fff; border-top: 15px solid transparent; border-bottom: 15px solid transparent; margin-left: 5px;">
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
 <div class="grid-service servicee">
