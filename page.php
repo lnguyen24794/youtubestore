@@ -5,19 +5,21 @@
     <section class="tour" id="grid-hero">
         <div class="container">
             <div class="row">
-                <div class="col-md-8 tour-content">
+                <div class="col-md-8 col-12">
                     <?php while (have_posts()):
                         the_post(); ?>
-                        <h1>
+                        <h1 class="single-post-title">
                             <?php the_title(); ?>
                         </h1>
 
-                        <?php if (has_post_thumbnail()): ?>
-                            <?php the_post_thumbnail('full', array('class' => 'tour-image', 'alt' => get_the_title(), 'loading' => 'lazy')); ?>
-                        <?php endif; ?>
-
                         <div class="tour-subtitle-wrapper wrapper-content">
                             <?php the_content(); ?>
+                        </div>
+
+                        <div>
+                            <!-- Google Ads Placeholder -->
+                            <ins class="adsbygoogle adsbygoogle-block" data-ad-client="ca-pub-4885114851785989"
+                                data-ad-slot="6830795445" data-ad-format="auto" data-full-width-responsive="true"></ins>
                         </div>
 
                         <div class="tour-contact-wrapper">
