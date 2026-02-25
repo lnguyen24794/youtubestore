@@ -134,32 +134,6 @@
         </nav>
     </div>
 
-    <!-- Language Picker -->
-    <div class="language-picker">
-        <button class="language-picker__button"
-            onclick="document.getElementById('language-content').classList.toggle('show');" aria-expanded="false"
-            aria-label="Select Language">
-            <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/flag_vi.png" alt="Tiếng Việt" width="24"
-                height="16">
-            <em>Tiếng Việt</em>
-            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-            </svg>
-        </button>
-        <div id="language-content" class="dropdown-content">
-            <ul class="language-picker__list">
-                <li>
-                    <a href="<?php echo home_url('/'); ?>" class="active">
-                        <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/flag_vi.png" alt="Tiếng Việt"
-                            width="24" height="16">
-                        <span>Tiếng Việt</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-
     <header id="header" class="header">
         <div class="container-fluid">
             <div class="row">
