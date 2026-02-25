@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define Constants
-define('YOUTUBESTORE_VERSION', '1.1.0');
+define('YOUTUBESTORE_VERSION', '1.1.1');
 define('YOUTUBESTORE_DIR', get_template_directory());
 define('YOUTUBESTORE_URI', get_template_directory_uri());
 
@@ -143,6 +143,17 @@ function youtubestore_async_css($html, $handle, $href, $media)
     return $html;
 }
 add_filter('style_loader_tag', 'youtubestore_async_css', 10, 4);
+
+/**
+ * Add Content Security Policy Header
+ */
+function youtubestore_add_csp_header()
+{
+    if (!is_admin()) {
+        header("Content-Security-Policy: upgrade-insecure-requests;");
+    }
+}
+add_action('send_headers', 'youtubestore_add_csp_header');
 
 
 
