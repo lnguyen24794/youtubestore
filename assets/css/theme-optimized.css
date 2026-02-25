@@ -653,6 +653,7 @@ h6 {
 @media screen and (max-width: 768px) {
     .wrapper-content img {
         width: 100% !important;
+        height: auto !important;
     }
 }
 
