@@ -126,29 +126,9 @@ function youtubestore_remove_core_css()
 add_action('wp_enqueue_scripts', 'youtubestore_remove_core_css', 100);
 
 /**
- * Async Load CSS
+ * Optimized out: Async Load CSS was removed because it causes Flash of Unstyled Content (FOUC)
+ * and high Cumulative Layout Shift (CLS) scores since we do not have critical CSS inlined.
  */
-function youtubestore_async_css($html, $handle, $href, $media)
-{
-    // Only optimize our specific stylesheets
-    $async_stylesheets = array(
-        'youtubestore-app',
-        'youtubestore-optimized'
-    );
-
-    if (in_array($handle, $async_stylesheets)) {
-        $html = str_replace("rel='stylesheet'", "rel='stylesheet' media='print' onload=\"this.media='all'\"", $html);
-        $html .= '<noscript><link rel="stylesheet" id="' . $handle . '-css" href="' . $href . '" type="text/css" media="' . $media . '" /></noscript>';
-    }
-
-    // Add display=swap to Google Fonts
-    if (strpos($href, 'fonts.googleapis.com') !== false && strpos($href, 'display=swap') === false) {
-        $html = str_replace('href="' . $href . '"', 'href="' . $href . '&display=swap"', $html);
-    }
-
-    return $html;
-}
-add_filter('style_loader_tag', 'youtubestore_async_css', 10, 4);
 
 /**
  * Add Content Security Policy Header

@@ -16,6 +16,8 @@
         <link rel="preload" as="image" href="<?php echo YOUTUBESTORE_URI; ?>/assets/images/1912x800-5.webp"
             media="(min-width: 769px)">
     <?php endif; ?>
+    <link rel="preload" href="<?php echo YOUTUBESTORE_URI; ?>/assets/css/home/app.min.css" as="style">
+    <link rel="preload" href="<?php echo YOUTUBESTORE_URI; ?>/assets/css/theme-optimized.css" as="style">
     <?php wp_head(); ?>
     <style>
         iframe {
