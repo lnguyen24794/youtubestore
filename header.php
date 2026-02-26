@@ -5,6 +5,11 @@
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://connect.facebook.net">
+
     <?php if (is_front_page()): ?>
         <link rel="preload" as="image" href="<?php echo YOUTUBESTORE_URI; ?>/assets/images/714x500-2.jpg"
             media="(max-width: 768px)">

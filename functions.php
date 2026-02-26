@@ -116,6 +116,12 @@ function youtubestore_remove_core_css()
     wp_dequeue_style('wp-block-library-theme');
     wp_dequeue_style('wc-blocks-style');
     wp_dequeue_style('classic-theme-styles');
+
+    // Disable dashicons for non-logged in users
+    if (!is_user_logged_in()) {
+        wp_dequeue_style('dashicons');
+        wp_deregister_style('dashicons');
+    }
 }
 add_action('wp_enqueue_scripts', 'youtubestore_remove_core_css', 100);
 
@@ -178,6 +184,85 @@ require_once YOUTUBESTORE_DIR . '/inc/table-of-contents.php';
 // Optimization & Security
 add_filter('xmlrpc_enabled', '__return_false');
 remove_action('wp_head', 'wp_generator');
+
+/**
+ * Disable WordPress Emojis
+ */
+function youtubestore_disable_emojis()
+{
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('admin_print_scripts', 'print_emoji_detection_script');
+    remove_action('wp_print_styles', 'print_emoji_styles');
+    remove_action('admin_print_styles', 'print_emoji_styles');
+    remove_filter('the_content_feed', 'wp_staticize_emoji');
+    remove_filter('comment_text_rss', 'wp_staticize_emoji');
+    remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+    add_filter('tiny_mce_plugins', 'youtubestore_disable_emojis_tinymce');
+    add_filter('wp_resource_hints', 'youtubestore_disable_emojis_remove_dns_prefetch', 10, 2);
+}
+add_action('init', 'youtubestore_disable_emojis');
+
+function youtubestore_disable_emojis_tinymce($plugins)
+{
+    if (is_array($plugins)) {
+        return array_diff($plugins, array('wpemoji'));
+    } else {
+        return array();
+    }
+}
+
+function youtubestore_disable_emojis_remove_dns_prefetch($urls, $relation_type)
+{
+    if ('dns-prefetch' == $relation_type) {
+        $emoji_svg_url = apply_filters('emoji_svg_url', 'https://s.w.org/images/core/emoji/2/svg/');
+        $urls = array_diff($urls, array($emoji_svg_url));
+    }
+    return $urls;
+}
+
+/**
+ * Disable WP Embeds
+ */
+function youtubestore_disable_embeds_code_init()
+{
+    remove_action('rest_api_init', 'wp_oembed_register_route');
+    remove_filter('oembed_dataparse', 'wp_filter_oembed_result', 10);
+    remove_action('wp_head', 'wp_oembed_add_discovery_links');
+    remove_action('wp_head', 'wp_oembed_add_host_js');
+    add_filter('embed_oembed_discover', '__return_false');
+    remove_filter('pre_oembed_result', 'wp_filter_pre_oembed_result', 10);
+}
+add_action('init', 'youtubestore_disable_embeds_code_init', 9999);
+
+/**
+ * Remove Query Strings from static resources
+ */
+function youtubestore_remove_script_version($src)
+{
+    if (strpos($src, '?ver=')) {
+        $src = remove_query_arg('ver', $src);
+    }
+    if (strpos($src, '&ver=')) {
+        $src = remove_query_arg('ver', $src);
+    }
+    return $src;
+}
+add_filter('style_loader_src', 'youtubestore_remove_script_version', 9999);
+add_filter('script_loader_src', 'youtubestore_remove_script_version', 9999);
+
+/**
+ * Remove jQuery Migrate
+ */
+function youtubestore_remove_jquery_migrate($scripts)
+{
+    if (!is_admin() && isset($scripts->registered['jquery'])) {
+        $script = $scripts->registered['jquery'];
+        if ($script->deps) {
+            $script->deps = array_diff($script->deps, array('jquery-migrate'));
+        }
+    }
+}
+add_action('wp_default_scripts', 'youtubestore_remove_jquery_migrate');
 
 
 // Modify Main Query for Archive
