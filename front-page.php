@@ -6,15 +6,6 @@
 get_header();
 ?>
 
-<div style="position:fixed; top:-100%">
-    <h1>Youtubestore.vn Đơn Vị Mua Bán Chuyển Nhượng Kênh Youtube Uy Tín</h1>
-    <h2>Giới thiệu chung</h2>
-    <h2>Danh sách kênh</h2>
-    <h2>Chuyển nhượng kênh</h2>
-    <h2>Tin tức</h2>
-    <h2>Liên hệ</h2>
-</div>
-
 <div class="grid-hero" id="grid-hero">
     <div id="grid-hero-banner-container" style="width: 100%; position: relative; display: block;">
         <picture>
@@ -159,7 +150,7 @@ get_header();
 </div>
 
 <div id="custom-welcome-modal"
-    style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 30, 30, 0.55); z-index: 10000; align-items: center; justify-content: center;">
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 30, 30, 0.55); z-index: 10000; align-items: center; justify-content: center;">
     <div
         style="background: #fff; width: 90%; max-width: 500px; padding: 30px 20px; border-radius: 5px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
         <h3 style="font-size: 24px; color: rgba(0,0,0,0.65); margin-bottom: 25px; margin-top: 0; font-weight: 600;">Hãy
@@ -240,9 +231,7 @@ get_header();
                 loadYoutubeVideo(facade);
             });
 
-            if (window.innerWidth > 768) {
-                loadYoutubeVideo(facade);
-            }
+            // Auto-load on desktop is disabled to dramatically improve PageSpeed
         });
 
 
