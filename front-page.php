@@ -239,11 +239,13 @@ get_header();
             facade.addEventListener('click', function () {
                 loadYoutubeVideo(facade);
             });
+
+            if (window.innerWidth > 768) {
+                loadYoutubeVideo(facade);
+            }
         });
 
-        if (window.innerWidth > 768) {
-            loadYoutubeVideo(facade);
-        }
+
     });
 </script>
 
