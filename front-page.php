@@ -231,7 +231,10 @@ get_header();
                 loadYoutubeVideo(facade);
             });
 
-            // Auto-load on desktop is disabled to dramatically improve PageSpeed
+            // Auto-load on desktop
+            if (window.innerWidth > 768) {
+                loadYoutubeVideo(facade);
+            }
         });
 
 
