@@ -327,40 +327,44 @@ get_header();
             <tbody>
                 <?php
                 // Get order page URL (do this ONCE outside the loop for performance)
-                $order_page = null;
-                $possible_slugs = array(
-                    'quy-trinh-giao-dich-kenh-youtube',
-                    'quy-trinh-giao-dich-kenh-youtube-day-ban-nhe'
-                );
+                $order_url = get_transient('youtubestore_order_url');
+                if (false === $order_url) {
+                    $order_page = null;
+                    $possible_slugs = array(
+                        'quy-trinh-giao-dich-kenh-youtube',
+                        'quy-trinh-giao-dich-kenh-youtube-day-ban-nhe'
+                    );
 
-                foreach ($possible_slugs as $slug) {
-                    $order_page = get_page_by_path($slug);
-                    if ($order_page) {
-                        break;
-                    }
-                }
-
-                if (!$order_page) {
-                    $pages = get_pages(array(
-                        'post_status' => 'publish',
-                        'number' => 1,
-                    ));
-
-                    foreach ($pages as $page) {
-                        if (stripos($page->post_title, 'quy trình giao dịch') !== false) {
-                            $order_page = $page;
+                    foreach ($possible_slugs as $slug) {
+                        $order_page = get_page_by_path($slug);
+                        if ($order_page) {
                             break;
                         }
                     }
-                }
 
-                $order_url = $order_page ? get_permalink($order_page->ID) : home_url('/quy-trinh-giao-dich-kenh-youtube');
+                    if (!$order_page) {
+                        $pages = get_pages(array(
+                            'post_status' => 'publish',
+                            'number' => 1,
+                        ));
+
+                        foreach ($pages as $page) {
+                            if (stripos($page->post_title, 'quy trình giao dịch') !== false) {
+                                $order_page = $page;
+                                break;
+                            }
+                        }
+                    }
+
+                    $order_url = $order_page ? get_permalink($order_page->ID) : home_url('/quy-trinh-giao-dich-kenh-youtube');
+                    set_transient('youtubestore_order_url', $order_url, 12 * HOUR_IN_SECONDS);
+                }
 
                 if (have_posts()) {
                     while (have_posts()) {
                         the_post();
 
-                        $subscribers = function_exists('get_field') ? get_field('subscribers') : get_post_meta(get_the_ID(), 'subscribers', true);
+                        $subscribers = get_post_meta(get_the_ID(), 'subscribers', true);
                         // Ensure subscribers is a number
                         $subscribers_num = 0;
                         if (!empty($subscribers)) {
@@ -369,10 +373,10 @@ get_header();
                             $subscribers_num = intval($subscribers_clean);
                         }
 
-                        $video_url = function_exists('get_field') ? get_field('video_url') : get_post_meta(get_the_ID(), 'video_url', true);
+                        $video_url = get_post_meta(get_the_ID(), 'video_url', true);
                         $video_url = $video_url ? $video_url : '#';
 
-                        $price = function_exists('get_field') ? get_field('price') : get_post_meta(get_the_ID(), 'price', true);
+                        $price = get_post_meta(get_the_ID(), 'price', true);
                         // Ensure price is a number
                         $price_num = 0;
                         if (!empty($price)) {
@@ -382,7 +386,7 @@ get_header();
                         }
                         $price_formatted = number_format($price_num, 0, ',', '.');
 
-                        $monetization = function_exists('get_field') ? get_field('monetization') : get_post_meta(get_the_ID(), 'monetization', true);
+                        $monetization = get_post_meta(get_the_ID(), 'monetization', true);
 
                         // Determine status text and class from monetization field
                         // Monetization field can be: 'yes', 'no', 'Đã bật kiếm tiền', 'Chưa bật kiếm tiền', 'Tắt kiếm tiền'
@@ -425,7 +429,7 @@ get_header();
                         }
 
                         // Override with channel status if sold
-                        $channel_status = function_exists('get_field') ? get_field('status') : get_post_meta(get_the_ID(), 'status', true);
+                        $channel_status = get_post_meta(get_the_ID(), 'status', true);
                         if ($channel_status === 'sold' || $channel_status === 'Đã bán') {
                             $status_text = 'Đã bán';
                             $status_class = 'sold';
@@ -529,28 +533,36 @@ get_header();
     <!-- Content Section from Page Editor -->
     <?php
     // Get the archive page content - try by ID 64 first (from admin URL)
-    $archive_page = get_post(64);
+    $archive_page_id = get_transient('youtubestore_archive_page_id');
 
-    // If not found or not a page, try by slug
-    if (!$archive_page || $archive_page->post_type !== 'page') {
-        $archive_page = get_page_by_path('mua-kenh-youtube');
-    }
+    if (false === $archive_page_id) {
+        $archive_page = get_post(64);
 
-    // If still not found, try to find page with matching slug/title
-    if (!$archive_page) {
-        $pages = get_pages(array(
-            'post_status' => 'publish',
-        ));
-        foreach ($pages as $page) {
-            if (
-                stripos($page->post_name, 'mua-kenh') !== false ||
-                stripos($page->post_title, 'danh sách kênh') !== false ||
-                stripos($page->post_title, 'mua bán kênh') !== false
-            ) {
-                $archive_page = $page;
-                break;
+        // If not found or not a page, try by slug
+        if (!$archive_page || $archive_page->post_type !== 'page') {
+            $archive_page = get_page_by_path('mua-kenh-youtube');
+        }
+
+        // If still not found, try to find page with matching slug/title
+        if (!$archive_page) {
+            $pages = get_pages(array(
+                'post_status' => 'publish',
+            ));
+            foreach ($pages as $page) {
+                if (
+                    stripos($page->post_name, 'mua-kenh') !== false ||
+                    stripos($page->post_title, 'danh sách kênh') !== false ||
+                    stripos($page->post_title, 'mua bán kênh') !== false
+                ) {
+                    $archive_page = $page;
+                    break;
+                }
             }
         }
+        $archive_page_id = $archive_page ? $archive_page->ID : 0;
+        set_transient('youtubestore_archive_page_id', $archive_page_id, 12 * HOUR_IN_SECONDS);
+    } else {
+        $archive_page = $archive_page_id ? get_post($archive_page_id) : null;
     }
 
     if ($archive_page && !empty($archive_page->post_content)):
