@@ -9,9 +9,9 @@ get_header();
 <div class="grid-hero" id="grid-hero">
     <div id="grid-hero-banner-container" style="width: 100%; position: relative; display: block;">
         <picture>
-            <source media="(max-width: 768px)" srcset="<?php echo YOUTUBESTORE_URI; ?>/assets/images/714x500-2.jpg">
-            <img id="grid-hero-banner-img" src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/1912x800-5.webp"
-                alt="Youtube Store" fetchpriority="high" loading="eager" width="1912" height="800"
+            <source media="(max-width: 768px)" srcset="<?php echo esc_url(YOUTUBESTORE_URI . '/assets/images/714x500-2.jpg'); ?>">
+            <img id="grid-hero-banner-img" src="<?php echo esc_url(YOUTUBESTORE_URI . '/assets/images/1912x800-5.webp'); ?>"
+                alt="Youtube Store" fetchpriority="high" loading="eager" decoding="async" width="1912" height="800"
                 style="width: 100%; min-height: 500px; object-fit: cover; object-position: center; display: block;">
         </picture>
     </div>
@@ -81,7 +81,7 @@ get_header();
                         style="position: relative; padding-bottom: 56.25%; height: 0; background: #000; border-radius: 8px; overflow: hidden; cursor: pointer;">
                         <img src="https://img.youtube.com/vi/oITErRInqZM/hqdefault.jpg" alt="Video Youtubestore"
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;"
-                            width="1280" height="720" loading="lazy">
+                            width="1280" height="720" loading="lazy" decoding="async">
                         <div class="play-button-overlay"
                             style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; background: rgba(220, 53, 69, 0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
                             <div
@@ -156,10 +156,10 @@ get_header();
         <h3 style="font-size: 24px; color: rgba(0,0,0,0.65); margin-bottom: 25px; margin-top: 0; font-weight: 600;">Hãy
             lựa chọn nhu cầu của bạn?</h3>
         <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
-            <button onclick="window.location.href='<?php echo home_url('/mua-kenh-youtube'); ?>'"
+            <button onclick="window.location.href='<?php echo esc_url(home_url('/mua-kenh-youtube')); ?>'"
                 style="padding: 10px 20px; border-radius: 4px; background-color: #CF4042; color: #fff; font-size: 18px; border: none; cursor: pointer; text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3); font-weight: 600;">Tôi
                 muốn mua kênh</button>
-            <button onclick="window.location.href='<?php echo home_url('/chuyen-nhuong-kenh-youtube'); ?>'"
+            <button onclick="window.location.href='<?php echo esc_url(home_url('/chuyen-nhuong-kenh-youtube')); ?>'"
                 style="padding: 10px 20px; border-radius: 4px; background-color: #CF4042; color: #fff; font-size: 18px; border: none; cursor: pointer; text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3); font-weight: 600;">Tôi
                 muốn bán kênh</button>
         </div>
@@ -169,77 +169,6 @@ get_header();
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Show the custom modal
-        var modal = document.getElementById('custom-welcome-modal');
-        if (modal) {
-            modal.style.display = 'flex';
-        }
-
-        // Close modal when clicking outside
-        modal.addEventListener('click', function (e) {
-            if (e.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
-    });
-
-    document.addEventListener("DOMContentLoaded", function () {
-        var facades = document.querySelectorAll('.youtube-facade');
-
-        // Function to load the iframe
-        var loadYoutubeVideo = function (facade) {
-            var videoId = facade.getAttribute('data-id');
-            if (videoId && !facade.classList.contains('loaded')) {
-                var iframe = document.createElement('iframe');
-                // Added mute=1 back. Autoplaying with sound unmuted forces the browser 
-                // to download massive amounts of data immediately, killing mobile performance.
-                iframe.src = 'https://www.youtube-nocookie.com/embed/' + videoId + '?autoplay=1&rel=0&playsinline=1';
-                iframe.setAttribute('frameborder', '0');
-                // Force full size
-                iframe.setAttribute('style', 'position: absolute; top: 0; left: 0; width: 100%; height: 100%;');
-                iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-                iframe.setAttribute('allowfullscreen', 'true');
-
-                facade.innerHTML = '';
-                facade.appendChild(iframe);
-                facade.classList.add('loaded'); // Prevent multiple loads
-            }
-        };
-
-        // 1. Hover effects (fallback if auto-play fails or is slow)
-        facades.forEach(function (facade) {
-            facade.addEventListener('mouseenter', function () {
-                var overlay = facade.querySelector('.play-button-overlay');
-                if (overlay) {
-                    overlay.style.background = 'rgba(220, 53, 69, 1)';
-                    overlay.style.transform = 'translate(-50%, -50%) scale(1.1)';
-                }
-            });
-            facade.addEventListener('mouseleave', function () {
-                var overlay = facade.querySelector('.play-button-overlay');
-                if (overlay) {
-                    overlay.style.background = 'rgba(220, 53, 69, 0.9)';
-                    overlay.style.transform = 'translate(-50%, -50%) scale(1)';
-                }
-            });
-
-            // 2. Click to play (fallback)
-            facade.addEventListener('click', function () {
-                loadYoutubeVideo(facade);
-            });
-
-            // Auto-load on desktop
-            if (window.innerWidth > 768) {
-                loadYoutubeVideo(facade);
-            }
-        });
-
-
-    });
-</script>
 
 <?php
 get_footer();

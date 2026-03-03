@@ -16,6 +16,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://connect.facebook.net">
+    <?php if (is_front_page()): ?>
+    <link rel="preconnect" href="https://img.youtube.com" crossorigin>
+    <?php endif; ?>
 
     <?php if (is_front_page()): ?>
         <link rel="preload" as="image" href="<?php echo YOUTUBESTORE_URI; ?>/assets/images/714x500-2.jpg"
@@ -24,7 +27,9 @@
             media="(min-width: 769px)">
     <?php endif; ?>
     <link rel="preload" href="<?php echo YOUTUBESTORE_URI; ?>/assets/css/home/app.min.css" as="style">
+    <?php if (!is_front_page()): ?>
     <link rel="preload" href="<?php echo YOUTUBESTORE_URI; ?>/assets/css/theme-optimized.css" as="style">
+    <?php endif; ?>
     <?php wp_head(); ?>
     <style>
         iframe {

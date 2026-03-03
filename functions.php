@@ -76,6 +76,11 @@ function youtubestore_scripts()
     if (is_post_type_archive('youtube_channel')) {
         wp_enqueue_script('youtubestore-archive-channels', YOUTUBESTORE_URI . '/assets/js/archive-channels.js', array('jquery'), YOUTUBESTORE_VERSION, true);
     }
+
+    // Front page: lightweight deferred script (no jQuery) to reduce main-thread time
+    if (is_front_page()) {
+        wp_enqueue_script('youtubestore-front-page', YOUTUBESTORE_URI . '/assets/js/front-page.js', array(), YOUTUBESTORE_VERSION, true);
+    }
 }
 add_action('wp_enqueue_scripts', 'youtubestore_scripts');
 
@@ -96,7 +101,8 @@ function youtubestore_defer_scripts($tag, $handle, $src)
         'jquery-migrate',
         'youtubestore-app',
         'youtubestore-main',
-        'youtubestore-archive-channels'
+        'youtubestore-archive-channels',
+        'youtubestore-front-page'
     );
 
     if (in_array($handle, $defer_scripts)) {
@@ -124,6 +130,25 @@ function youtubestore_remove_core_css()
     }
 }
 add_action('wp_enqueue_scripts', 'youtubestore_remove_core_css', 100);
+
+/**
+ * Non-render-blocking CSS on front page: load theme-optimized.css with media="print" + onload
+ * to reduce render-blocking time (PageSpeed: "Remove render-blocking resources").
+ * Critical above-the-fold styles are in app.min.css and inline critical CSS in front-page.php.
+ */
+function youtubestore_nonblocking_styles_front_page($html, $handle, $href, $media)
+{
+    if (!is_front_page() || $handle !== 'youtubestore-optimized') {
+        return $html;
+    }
+    return sprintf(
+        '<link rel="stylesheet" id="%s-css" href="%s" media="print" onload="this.media=\'all\';this.onload=null;">' . "\n" . '<noscript><link rel="stylesheet" href="%s"></noscript>',
+        esc_attr($handle),
+        esc_url($href),
+        esc_url($href)
+    );
+}
+add_filter('style_loader_tag', 'youtubestore_nonblocking_styles_front_page', 10, 4);
 
 /**
  * Optimized out: Async Load CSS was removed because it causes Flash of Unstyled Content (FOUC)
