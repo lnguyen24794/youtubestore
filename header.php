@@ -134,10 +134,7 @@
                         <div class="navigation__flex">
                             <div class="navigation__content">
                                 <div class="navigation__image">
-                                    <img id="menu-image" class="img-fluid"
-                                        src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/menu-about.png"
-                                        alt="Menu" width="612" height="463" loading="lazy"
-                                        style="max-height: 80px; width: auto;">
+                                    <?php youtubestore_theme_img('home/menu-about.png', array('alt' => 'Menu', 'width' => 612, 'height' => 463, 'class' => 'img-fluid', 'id' => 'menu-image', 'style' => 'max-height:80px;width:auto')); ?>
                                 </div>
                                 <div class="navigation__info">
                                     <ul class="navigation-list">

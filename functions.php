@@ -169,6 +169,46 @@ add_action('send_headers', 'youtubestore_add_csp_header');
 
 
 /**
+ * Output theme image with WebP when available (next-gen format). Use for assets in assets/images/.
+ *
+ * @param string $path_relative Path relative to assets/images, e.g. 'home/logo.png' or 'logoSaleNoti.png'.
+ * @param array  $attrs         Optional. Attributes for img: alt (required), width, height, loading ('lazy' default), class, etc.
+ * @return void
+ */
+function youtubestore_theme_img($path_relative, $attrs = array())
+{
+    $path_relative = ltrim($path_relative, '/');
+    $base = pathinfo($path_relative, PATHINFO_DIRNAME);
+    $name = pathinfo($path_relative, PATHINFO_FILENAME);
+    $ext = pathinfo($path_relative, PATHINFO_EXTENSION);
+    $webp_relative = ($base ? $base . '/' : '') . $name . '.webp';
+    $webp_path = YOUTUBESTORE_DIR . '/assets/images/' . $webp_relative;
+
+    $img_url = YOUTUBESTORE_URI . '/assets/images/' . $path_relative;
+    $webp_url = YOUTUBESTORE_URI . '/assets/images/' . $webp_relative;
+    $use_webp = strtolower($ext) !== 'webp' && file_exists($webp_path);
+
+    $alt = isset($attrs['alt']) ? esc_attr($attrs['alt']) : '';
+    $loading = isset($attrs['loading']) ? $attrs['loading'] : 'lazy';
+    unset($attrs['alt'], $attrs['loading']);
+    $attr_str = '';
+    foreach (array_merge(array('width' => '', 'height' => '', 'class' => '', 'decoding' => 'async'), $attrs) as $k => $v) {
+        if ($v !== '' && $v !== null) {
+            $attr_str .= ' ' . esc_attr($k) . '="' . esc_attr($v) . '"';
+        }
+    }
+
+    if ($use_webp) {
+        echo '<picture>';
+        echo '<source type="image/webp" srcset="' . esc_url($webp_url) . '">';
+        echo '<img src="' . esc_url($img_url) . '" alt="' . $alt . '" loading="' . esc_attr($loading) . '"' . $attr_str . '>';
+        echo '</picture>';
+    } else {
+        echo '<img src="' . esc_url($img_url) . '" alt="' . $alt . '" loading="' . esc_attr($loading) . '"' . $attr_str . '>';
+    }
+}
+
+/**
  * Require Files
  */
 require_once YOUTUBESTORE_DIR . '/inc/post-types.php';

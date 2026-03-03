@@ -1,0 +1,12 @@
+{
+  "name": "youtubestore-theme",
+  "private": true,
+  "description": "Build and image optimization for youtubestore theme",
+  "scripts": {
+    "images:optimize": "node scripts/optimize-images.js",
+    "images:optimize:dry": "node scripts/optimize-images.js --dry-run"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.5"
+  }
+}

@@ -9,7 +9,9 @@ get_header();
 <div class="grid-hero" id="grid-hero">
     <div id="grid-hero-banner-container" style="width: 100%; position: relative; display: block;">
         <picture>
+            <source type="image/webp" media="(max-width: 768px)" srcset="<?php echo esc_url(YOUTUBESTORE_URI . '/assets/images/714x500-2.webp'); ?>">
             <source media="(max-width: 768px)" srcset="<?php echo esc_url(YOUTUBESTORE_URI . '/assets/images/714x500-2.jpg'); ?>">
+            <source type="image/webp" media="(min-width: 769px)" srcset="<?php echo esc_url(YOUTUBESTORE_URI . '/assets/images/1912x800-5.webp'); ?>">
             <img id="grid-hero-banner-img" src="<?php echo esc_url(YOUTUBESTORE_URI . '/assets/images/1912x800-5.webp'); ?>"
                 alt="Youtube Store" fetchpriority="high" loading="eager" decoding="async" width="1912" height="800"
                 style="width: 100%; min-height: 500px; object-fit: cover; object-position: center; display: block;">

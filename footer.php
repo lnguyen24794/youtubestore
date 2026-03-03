@@ -34,10 +34,8 @@
                             <li><span>Zalo:</span> <a href="https://zalo.me/0899707888" title="Zalo">0899707888</a></li>
                             <li>
                                 <a href="http://online.gov.vn/Home/WebDetails/89727?AspxAutoDetectCookieSupport=1"
-                                    target="_blank" title="Đăng ký doanh nghiệp">
-                                    <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/logoSaleNoti.webp"
-                                        alt="Đăng ký doanh nghiệp" style="max-width: 150px; max-height: 50px"
-                                        width="150" height="57" loading="lazy">
+                                    target="_blank" rel="noopener" title="Đăng ký doanh nghiệp">
+                                    <?php youtubestore_theme_img('logoSaleNoti.png', array('alt' => 'Đăng ký doanh nghiệp', 'width' => 150, 'height' => 57, 'style' => 'max-width:150px;max-height:50px')); ?>
                                 </a>
                             </li>
                         </ul>
@@ -105,9 +103,8 @@
     <div class="messenger">
         <div class="ring">
             <div class="">
-                <a href="https://zalo.me/0899707888" class="btn-img" target="_blank" aria-label="Zalo">
-                    <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/communication.png" width="38"
-                        height="38" alt="Zalo Icon" loading="lazy">
+                <a href="https://zalo.me/0899707888" class="btn-img" target="_blank" rel="noopener" aria-label="Zalo">
+                    <?php youtubestore_theme_img('home/communication.png', array('alt' => 'Zalo', 'width' => 38, 'height' => 38)); ?>
                 </a>
             </div>
         </div>
@@ -120,9 +117,8 @@
     <div class="zalo">
         <div class="ring">
             <div class="">
-                <a href="https://m.me/Youtubestore.vn" class="btn-img" target="_blank" aria-label="Facebook Messenger">
-                    <img src="<?php echo YOUTUBESTORE_URI; ?>/assets/images/home/social-media.png" width="38"
-                        height="38" alt="Messenger Icon" loading="lazy">
+                <a href="https://m.me/Youtubestore.vn" class="btn-img" target="_blank" rel="noopener" aria-label="Facebook Messenger">
+                    <?php youtubestore_theme_img('home/social-media.png', array('alt' => 'Messenger', 'width' => 38, 'height' => 38)); ?>
                 </a>
             </div>
         </div>
