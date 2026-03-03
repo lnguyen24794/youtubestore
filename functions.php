@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define Constants
-define('YOUTUBESTORE_VERSION', '1.1.3');
+define('YOUTUBESTORE_VERSION', '1.1.4');
 define('YOUTUBESTORE_DIR', get_template_directory());
 define('YOUTUBESTORE_URI', get_template_directory_uri());
 
@@ -132,13 +132,16 @@ function youtubestore_remove_core_css()
 add_action('wp_enqueue_scripts', 'youtubestore_remove_core_css', 100);
 
 /**
- * Non-render-blocking CSS on front page: load theme-optimized.css with media="print" + onload
+ * Non-render-blocking CSS on front page: theme-optimized + style.css with media="print" + onload
  * to reduce render-blocking time (PageSpeed: "Remove render-blocking resources").
- * Critical above-the-fold styles are in app.min.css and inline critical CSS in front-page.php.
  */
 function youtubestore_nonblocking_styles_front_page($html, $handle, $href, $media)
 {
-    if (!is_front_page() || $handle !== 'youtubestore-optimized') {
+    if (!is_front_page()) {
+        return $html;
+    }
+    $nonblock_handles = array('youtubestore-optimized', 'youtubestore-style');
+    if (!in_array($handle, $nonblock_handles, true)) {
         return $html;
     }
     return sprintf(
@@ -149,6 +152,97 @@ function youtubestore_nonblocking_styles_front_page($html, $handle, $href, $medi
     );
 }
 add_filter('style_loader_tag', 'youtubestore_nonblocking_styles_front_page', 10, 4);
+
+/**
+ * Add font-display: swap to Google Fonts URLs (PageSpeed: ensure text visible during webfont load).
+ */
+function youtubestore_fonts_display_swap($html, $handle, $href, $media)
+{
+    if (strpos($href, 'fonts.googleapis.com') === false) {
+        return $html;
+    }
+    $new_href = add_query_arg('display', 'swap', $href);
+    return str_replace(esc_url($href), esc_url($new_href), $html);
+}
+add_filter('style_loader_tag', 'youtubestore_fonts_display_swap', 15, 4);
+
+/**
+ * Preload plugin CSS that is render-blocking (PageSpeed: preload key requests).
+ */
+function youtubestore_preload_plugin_css()
+{
+    if (is_admin() || !function_exists('wp_styles')) {
+        return;
+    }
+    $wp_styles = wp_styles();
+    if (!$wp_styles || !isset($wp_styles->registered)) {
+        return;
+    }
+    foreach ($wp_styles->registered as $handle => $obj) {
+        if (!isset($obj->src)) {
+            continue;
+        }
+        if (strpos($obj->src, 'youtube-channel-stats') !== false && strpos($obj->src, 'public.css') !== false) {
+            $href = $obj->src;
+            if (strpos($href, 'http') !== 0) {
+                $href = site_url($href);
+            }
+            echo '<link rel="preload" href="' . esc_url($href) . '" as="style">' . "\n";
+            break;
+        }
+    }
+}
+add_action('wp_head', 'youtubestore_preload_plugin_css', 1);
+
+/**
+ * Lazy load offscreen images (PageSpeed: defer offscreen images).
+ * Ensure attachment and content images have loading="lazy" and decoding="async".
+ */
+function youtubestore_lazy_attachment_image($attr, $attachment, $size)
+{
+    if (!isset($attr['loading']) || $attr['loading'] !== 'lazy') {
+        $attr['loading'] = 'lazy';
+    }
+    if (!isset($attr['decoding'])) {
+        $attr['decoding'] = 'async';
+    }
+    return $attr;
+}
+add_filter('wp_get_attachment_image_attributes', 'youtubestore_lazy_attachment_image', 10, 3);
+
+/**
+ * Add loading="lazy" and decoding="async" to content images that don't have it.
+ */
+function youtubestore_lazy_content_images($content)
+{
+    if (empty($content) || strpos($content, '<img') === false) {
+        return $content;
+    }
+    return preg_replace_callback('/<img\s([^>]*?)>/i', function ($m) {
+        $tag = $m[0];
+        if (strpos($tag, 'loading=') !== false) {
+            return $tag;
+        }
+        if (strpos($tag, '>') !== false) {
+            return str_replace('<img ', '<img loading="lazy" decoding="async" ', $tag);
+        }
+        return $tag;
+    }, $content);
+}
+add_filter('the_content', 'youtubestore_lazy_content_images', 20);
+
+/**
+ * Load front-page.js after window.load to reduce initial JS (PageSpeed: reduce unused JS).
+ */
+function youtubestore_front_page_script_loader($tag, $handle, $src)
+{
+    if (is_admin() || $handle !== 'youtubestore-front-page') {
+        return $tag;
+    }
+    $esc_src = esc_url($src);
+    return '<script>window.addEventListener("load",function(){var s=document.createElement("script");s.src="' . $esc_src . '";s.async=true;document.body.appendChild(s);});</script>';
+}
+add_filter('script_loader_tag', 'youtubestore_front_page_script_loader', 10, 3);
 
 /**
  * Optimized out: Async Load CSS was removed because it causes Flash of Unstyled Content (FOUC)
