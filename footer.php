@@ -35,7 +35,11 @@
                             <li>
                                 <a href="http://online.gov.vn/Home/WebDetails/89727?AspxAutoDetectCookieSupport=1"
                                     target="_blank" rel="noopener" title="Đăng ký doanh nghiệp">
-                                    <?php youtubestore_theme_img('logoSaleNoti.png', array('alt' => 'Đăng ký doanh nghiệp', 'width' => 150, 'height' => 57, 'style' => 'max-width:150px;max-height:50px')); ?>
+                                    <?php if (function_exists('youtubestore_theme_img')): ?>
+                                        <?php youtubestore_theme_img('logoSaleNoti.png', array('alt' => 'Đăng ký doanh nghiệp', 'width' => 150, 'height' => 57, 'style' => 'max-width:150px;max-height:50px')); ?>
+                                    <?php else: ?>
+                                        <img src="<?php echo esc_url(YOUTUBESTORE_URI . '/assets/images/logoSaleNoti.png'); ?>" alt="Đăng ký doanh nghiệp" width="150" height="57" style="max-width:150px;max-height:50px" loading="lazy" decoding="async">
+                                    <?php endif; ?>
                                 </a>
                             </li>
                         </ul>
@@ -104,7 +108,11 @@
         <div class="ring">
             <div class="">
                 <a href="https://zalo.me/0899707888" class="btn-img" target="_blank" rel="noopener" aria-label="Zalo">
-                    <?php youtubestore_theme_img('home/communication.png', array('alt' => 'Zalo', 'width' => 38, 'height' => 38)); ?>
+                    <?php if (function_exists('youtubestore_theme_img')): ?>
+                        <?php youtubestore_theme_img('home/communication.png', array('alt' => 'Zalo', 'width' => 38, 'height' => 38)); ?>
+                    <?php else: ?>
+                        <img src="<?php echo esc_url(YOUTUBESTORE_URI . '/assets/images/home/communication.png'); ?>" alt="Zalo" width="38" height="38" loading="lazy" decoding="async">
+                    <?php endif; ?>
                 </a>
             </div>
         </div>
@@ -118,7 +126,11 @@
         <div class="ring">
             <div class="">
                 <a href="https://m.me/Youtubestore.vn" class="btn-img" target="_blank" rel="noopener" aria-label="Facebook Messenger">
-                    <?php youtubestore_theme_img('home/social-media.png', array('alt' => 'Messenger', 'width' => 38, 'height' => 38)); ?>
+                    <?php if (function_exists('youtubestore_theme_img')): ?>
+                        <?php youtubestore_theme_img('home/social-media.png', array('alt' => 'Messenger', 'width' => 38, 'height' => 38)); ?>
+                    <?php else: ?>
+                        <img src="<?php echo esc_url(YOUTUBESTORE_URI . '/assets/images/home/social-media.png'); ?>" alt="Messenger" width="38" height="38" loading="lazy" decoding="async">
+                    <?php endif; ?>
                 </a>
             </div>
         </div>

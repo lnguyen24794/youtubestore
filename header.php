@@ -134,7 +134,11 @@
                         <div class="navigation__flex">
                             <div class="navigation__content">
                                 <div class="navigation__image">
-                                    <?php youtubestore_theme_img('home/menu-about.png', array('alt' => 'Menu', 'width' => 612, 'height' => 463, 'class' => 'img-fluid', 'id' => 'menu-image', 'style' => 'max-height:80px;width:auto')); ?>
+                                    <?php if (function_exists('youtubestore_theme_img')): ?>
+                                        <?php youtubestore_theme_img('home/menu-about.png', array('alt' => 'Menu', 'width' => 612, 'height' => 463, 'class' => 'img-fluid', 'id' => 'menu-image', 'style' => 'max-height:80px;width:auto')); ?>
+                                    <?php else: ?>
+                                        <img src="<?php echo esc_url(YOUTUBESTORE_URI . '/assets/images/home/menu-about.png'); ?>" alt="Menu" width="612" height="463" class="img-fluid" id="menu-image" style="max-height:80px;width:auto" loading="lazy" decoding="async">
+                                    <?php endif; ?>
                                 </div>
                                 <div class="navigation__info">
                                     <ul class="navigation-list">
